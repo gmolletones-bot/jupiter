@@ -1,7 +1,52 @@
 import { useCallback, useEffect, useEffectEvent, useReducer, useRef, useState } from 'react'
 import type { WebviewTag } from 'electron'
+import {
+  AudioWaveform,
+  BookmarkPlus,
+  CloudRain,
+  Cpu,
+  Flame,
+  History,
+  House,
+  Info,
+  LogOut,
+  Maximize,
+  Monitor,
+  Moon,
+  Orbit,
+  Palette,
+  PanelTop,
+  Pause,
+  Plus,
+  Printer,
+  Puzzle,
+  Radio,
+  RefreshCw,
+  RotateCcw,
+  RotateCw,
+  Save,
+  Scan,
+  Search,
+  Settings as SettingsIcon,
+  Shield,
+  ShieldCheck,
+  ShieldOff,
+  Square,
+  Star,
+  Sun,
+  Timer,
+  Trash2,
+  VolumeX,
+  Waves,
+  Wind,
+  Wrench,
+  X,
+  ZoomIn,
+  ZoomOut
+} from 'lucide-react'
 import BookmarksBar from './components/BookmarksBar'
 import BookmarksPage from './components/BookmarksPage'
+import CommandPalette, { type PaletteCommand } from './components/CommandPalette'
 import FindBar from './components/FindBar'
 import HistoryPage from './components/HistoryPage'
 import NewTabPage from './components/NewTabPage'
@@ -39,6 +84,7 @@ import type {
 import { useAppearance } from './useAppearance'
 import { exactHostOf, internalPageOf, SEARCH_ENGINES, toUrl } from './url'
 import { embedForVideo, type Playlist } from './widgets/playlists'
+import type { SoundId } from './widgets/ambient'
 import { useAmbient } from './widgets/useAmbient'
 import { usePomodoro } from './widgets/usePomodoro'
 
@@ -59,6 +105,8 @@ function App(): React.JSX.Element {
   const [blockedCounts, setBlockedCounts] = useState<Record<number, number>>({})
   /** Tab whose find bar is open, plus a counter to refocus it on Ctrl+F. */
   const [find, setFind] = useState<{ tabId: number; focusKey: number } | null>(null)
+  /** Commands of the open Ctrl+K palette (built when it opens); null when closed. */
+  const [palette, setPalette] = useState<PaletteCommand[] | null>(null)
   const [settingsSection, setSettingsSection] = useState<SettingsSection>('personalization')
   const [extensions, setExtensions] = useState<ExtensionInfo[]>([])
   const [bookmarks, setBookmarks] = useState(loadBookmarks)
@@ -314,7 +362,230 @@ function App(): React.JSX.Element {
       case 'quit':
         window.api.quit()
         break
+      case 'command-palette':
+        setPalette(palette ? null : paletteCommands())
+        break
     }
+  }
+
+  /** Everything the Ctrl+K palette can do; the first ones show before typing. */
+  const paletteCommands = (): PaletteCommand[] => {
+    const site = activeTab.kind === 'web' ? exactHostOf(activeTab.url) : ''
+    const siteShieldsUp = shields.enabled && !shields.allowedSites.includes(site)
+    const focusRunning = pomodoro.endsAt !== null
+    const command = (
+      id: string,
+      title: string,
+      icon: PaletteCommand['icon'],
+      run: () => void,
+      keywords = '',
+      hint?: string
+    ): PaletteCommand => ({ id, title, icon, run, keywords, hint })
+    const section = (
+      id: SettingsSection,
+      title: string,
+      icon: PaletteCommand['icon']
+    ): PaletteCommand =>
+      command(
+        `settings:${id}`,
+        `Configuración: ${title}`,
+        icon,
+        () => openSettings(id),
+        'ajustes opciones'
+      )
+    const sounds: [SoundId, string, PaletteCommand['icon']][] = [
+      ['rain', 'Lluvia', CloudRain],
+      ['fire', 'Chimenea', Flame],
+      ['waves', 'Olas', Waves],
+      ['wind', 'Viento', Wind],
+      ['white', 'Ruido blanco', Radio],
+      ['brown', 'Ruido marrón', AudioWaveform]
+    ]
+
+    return [
+      command('new-tab', 'Nueva pestaña', Plus, () => runAction('new-tab'), 'abrir', 'Ctrl+T'),
+      command('history', 'Historial', History, () => runAction('history'), 'visitadas', 'Ctrl+H'),
+      command('bookmarks', 'Marcadores', Star, () => runAction('bookmarks'), 'favoritos'),
+      command(
+        'theme-toggle',
+        settings.theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro',
+        settings.theme === 'dark' ? Sun : Moon,
+        () => updateSettings({ theme: settings.theme === 'dark' ? 'light' : 'dark' }),
+        'modo oscuro claro tema noche'
+      ),
+      command(
+        'focus-toggle',
+        focusRunning ? 'Pausar el temporizador Focus' : 'Iniciar el temporizador Focus',
+        focusRunning ? Pause : Timer,
+        pomodoro.toggle,
+        'pomodoro concentración trabajo'
+      ),
+      command('settings', 'Configuración', SettingsIcon, () => openSettings(), 'ajustes opciones'),
+      command(
+        'find',
+        'Buscar en la página',
+        Search,
+        () => runAction('find'),
+        'encontrar',
+        'Ctrl+F'
+      ),
+      command('close-tab', 'Cerrar pestaña', X, () => runAction('close-tab'), '', 'Ctrl+W'),
+      command(
+        'reload',
+        'Recargar la página',
+        RotateCw,
+        () => runAction('reload'),
+        'actualizar',
+        'Ctrl+R'
+      ),
+      command(
+        'bookmark-page',
+        activeBookmark ? 'Quitar de marcadores' : 'Añadir a marcadores',
+        BookmarkPlus,
+        () => runAction('bookmark-page'),
+        'guardar favorito estrella',
+        'Ctrl+D'
+      ),
+      command(
+        'bookmarks-bar',
+        settings.showBookmarksBar
+          ? 'Ocultar la barra de marcadores'
+          : 'Mostrar la barra de marcadores',
+        PanelTop,
+        () => runAction('toggle-bookmarks-bar')
+      ),
+      command(
+        'zoom-in',
+        'Acercar',
+        ZoomIn,
+        () => runAction('zoom-in'),
+        'zoom más grande',
+        'Ctrl++'
+      ),
+      command(
+        'zoom-out',
+        'Alejar',
+        ZoomOut,
+        () => runAction('zoom-out'),
+        'zoom más pequeño',
+        'Ctrl+-'
+      ),
+      command(
+        'zoom-reset',
+        'Restablecer el zoom',
+        Scan,
+        () => runAction('zoom-reset'),
+        '100',
+        'Ctrl+0'
+      ),
+      command(
+        'fullscreen',
+        'Pantalla completa',
+        Maximize,
+        () => runAction('fullscreen'),
+        '',
+        'F11'
+      ),
+      command('print', 'Imprimir', Printer, () => runAction('print'), '', 'Ctrl+P'),
+      command(
+        'save-page',
+        'Guardar página como…',
+        Save,
+        () => runAction('save-page'),
+        'descargar',
+        'Ctrl+S'
+      ),
+      command(
+        'devtools',
+        'Herramientas para desarrolladores',
+        Wrench,
+        () => runAction('devtools'),
+        'inspeccionar consola devtools'
+      ),
+      command(
+        'theme-system',
+        'Usar el tema del sistema',
+        Monitor,
+        () => updateSettings({ theme: 'system' }),
+        'automático'
+      ),
+      ...(site
+        ? [
+            command(
+              'site-shields',
+              siteShieldsUp ? `Bajar los escudos en ${site}` : `Subir los escudos en ${site}`,
+              siteShieldsUp ? ShieldOff : ShieldCheck,
+              () => void setSiteShields(site, !siteShieldsUp),
+              'bloqueador anuncios rastreadores'
+            )
+          ]
+        : []),
+      command(
+        'shields',
+        shields.enabled
+          ? 'Desactivar el bloqueador de anuncios'
+          : 'Activar el bloqueador de anuncios',
+        shields.enabled ? ShieldOff : Shield,
+        () => void setShieldsEnabled(!shields.enabled),
+        'escudos rastreadores'
+      ),
+      command(
+        'focus-reset',
+        'Reiniciar el temporizador Focus',
+        RotateCcw,
+        pomodoro.reset,
+        'pomodoro'
+      ),
+      ...sounds.map(([id, name, icon]) =>
+        command(
+          `sound:${id}`,
+          `${ambient.levels[id] !== undefined ? 'Detener' : 'Reproducir'} sonido: ${name}`,
+          icon,
+          () => ambient.toggle(id),
+          'ambiente música relajante'
+        )
+      ),
+      ...(Object.keys(ambient.levels).length > 0
+        ? [command('mute', 'Silenciar todos los sonidos', VolumeX, ambient.stopAll, 'callar parar')]
+        : []),
+      ...(playlist
+        ? [
+            command(
+              'stop-music',
+              `Detener la música (${playlist.title})`,
+              Square,
+              () => setPlaylist(null),
+              'parar reproductor'
+            )
+          ]
+        : []),
+      section('personalization', 'Personalización', Palette),
+      section('widgets', 'Widgets de inicio', Orbit),
+      section('home', 'Inicio y pestañas', House),
+      section('search', 'Buscador', Search),
+      section('privacy', 'Privacidad y escudos', Shield),
+      section('extensions', 'Extensiones', Puzzle),
+      section('system', 'Sistema y actualizaciones', Cpu),
+      section('about', 'Acerca de Jupiter', Info),
+      command(
+        'clear-data',
+        'Eliminar datos de navegación',
+        Trash2,
+        () => runAction('clear-data'),
+        'borrar cookies caché'
+      ),
+      command(
+        'updates',
+        'Buscar actualizaciones',
+        RefreshCw,
+        () => {
+          openSettings('system')
+          void window.api.checkForUpdates()
+        },
+        'versión nueva'
+      ),
+      command('quit', 'Salir de Jupiter', LogOut, () => runAction('quit'), 'cerrar')
+    ]
   }
 
   const onShortcut = useEffectEvent((action: ShortcutAction) => runAction(action))
@@ -511,6 +782,18 @@ function App(): React.JSX.Element {
           />
         )}
         {notice && <div className="toast">{notice}</div>}
+        {palette && (
+          <CommandPalette
+            tabs={tabs}
+            activeId={activeId}
+            bookmarks={bookmarks}
+            commands={palette}
+            searchEngine={settings.searchEngine}
+            onActivateTab={(id) => dispatch({ type: 'activate', id })}
+            onOpen={(url) => navigate(url)}
+            onClose={() => setPalette(null)}
+          />
+        )}
         <UpdateBanner status={updateStatus} />
       </main>
     </div>

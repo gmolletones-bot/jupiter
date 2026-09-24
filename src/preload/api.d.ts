@@ -26,6 +26,7 @@ declare global {
     | 'extensions'
     | 'clear-data'
     | 'quit'
+    | 'command-palette'
 
   type UpdateStatus =
     | { state: 'dev' | 'idle' | 'checking' | 'up-to-date'; version?: string }

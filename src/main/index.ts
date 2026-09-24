@@ -120,6 +120,8 @@ function shortcutFor(input: Input): ShortcutAction | null {
       return 'bookmark-page'
     case 'f':
       return 'find'
+    case 'k':
+      return 'command-palette'
     default:
       return null
   }

@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react'
 import {
   BookmarkPlus,
   Check,
+  Command,
   EllipsisVertical,
   History,
   LogOut,
@@ -36,6 +37,7 @@ type MenuEntry =
 
 const ENTRIES: MenuEntry[] = [
   { action: 'new-tab', icon: Plus, label: 'Nueva pestaña', shortcut: 'Ctrl+T' },
+  { action: 'command-palette', icon: Command, label: 'Paleta de comandos', shortcut: 'Ctrl+K' },
   'separator',
   { action: 'history', icon: History, label: 'Historial', shortcut: 'Ctrl+H' },
   { action: 'bookmarks', icon: Star, label: 'Marcadores', shortcut: 'Ctrl+Mayús+O' },
