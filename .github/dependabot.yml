@@ -7,6 +7,19 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 10
+    # Major versions of the build tooling must move together with electron-vite,
+    # and @types/node must match the Node.js bundled in Electron: update by hand.
+    ignore:
+      - dependency-name: vite
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@vitejs/plugin-react'
+        update-types: ['version-update:semver-major']
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      - dependency-name: eslint
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     groups:
       # Electron carries Chromium's security fixes: its own PR, never bundled.
       electron:
