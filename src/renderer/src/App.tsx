@@ -66,12 +66,19 @@ function App(): React.JSX.Element {
   const webviews = useRef(new Map<number, WebviewTag>())
   const addressRef = useRef<HTMLInputElement>(null)
 
-  useAppearance(settings)
+  const [mica, setMica] = useState(false)
   // Widgets live here, not in the new tab page, so they keep going across tabs.
   const pomodoro = usePomodoro(settings.focusMinutes, settings.breakMinutes)
   const ambient = useAmbient()
 
   const activeTab = tabs.find((tab) => tab.id === activeId) ?? tabs[0]
+  const isWebTab = activeTab.kind === 'web'
+  useAppearance(
+    settings,
+    isWebTab ? activeTab.themeColor : undefined,
+    isWebTab ? activeTab.faviconColor : undefined,
+    mica
+  )
   const activeBookmark =
     activeTab.kind === 'web'
       ? bookmarks.find((bookmark) => bookmark.url === activeTab.url)
@@ -333,6 +340,13 @@ function App(): React.JSX.Element {
   useEffect(refreshExtensions, [refreshExtensions])
 
   useEffect(() => {
+    window.api
+      .getSystem()
+      .then((system) => setMica(system.micaSupported && system.mica))
+      .catch(console.error)
+  }, [])
+
+  useEffect(() => {
     window.api.getUpdateStatus().then(setUpdateStatus).catch(console.error)
     return window.api.onUpdateStatus(setUpdateStatus)
   }, [])
@@ -406,6 +420,11 @@ function App(): React.JSX.Element {
             onSectionChange={setSettingsSection}
             onChange={updateSettings}
             onWallpapersChange={changeWallpapers}
+            mica={mica}
+            onMicaChange={(on) => {
+              setMica(on)
+              window.api.setSystem({ mica: on }).catch(console.error)
+            }}
             onExtensionsChanged={refreshExtensions}
             shields={shields}
             onShieldsEnabled={setShieldsEnabled}

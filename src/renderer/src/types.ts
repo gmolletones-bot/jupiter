@@ -55,6 +55,8 @@ export interface Settings {
   startup: StartupMode
   accentColor: string
   tintTabBar: boolean
+  /** Take the tab strip and toolbar colour from each site's theme colour. */
+  siteColors: boolean
   animations: boolean
   /** Base corner radius in px, scaled per element. */
   cornerRadius: number
@@ -94,6 +96,10 @@ export interface Tab {
   canGoForward: boolean
   /** The webview's webContents id, known once it's attached (main process refers to tabs by it). */
   contentsId?: number
+  /** The page's <meta name="theme-color">, as #rrggbb. */
+  themeColor?: string
+  /** Dominant colour of the favicon, used when there's no usable theme colour. */
+  faviconColor?: string
   /** Page zoom factor (1 = 100 %). */
   zoom?: number
   /** Set when the page couldn't be loaded (DNS error, no connection…). */

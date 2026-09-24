@@ -21,10 +21,11 @@ import {
   openExtensionPopup,
   removeExtension
 } from './extensions'
+import { registerFaviconColors } from './favicon'
 import { clearHistory, registerHistory, trackHistory } from './history'
 import { migrateFromOldName } from './migrate'
 import { registerStore } from './store'
-import { applyGpuSwitches, registerSystem } from './system'
+import { applyGpuSwitches, applyMica, registerSystem } from './system'
 import { registerUpdater } from './updater'
 
 // Session shared by every tab; kept apart from the app UI so clearing
@@ -142,6 +143,8 @@ function createWindow(): void {
     }
   })
 
+  applyMica(mainWindow)
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -195,6 +198,7 @@ app.whenReady().then(async () => {
 
   const browserSession = session.fromPartition(BROWSER_PARTITION)
   registerShields(browserSession, join(__dirname, '../preload/shields.js'))
+  registerFaviconColors(browserSession)
 
   ipcMain.on('window:toggle-fullscreen', (event) => {
     const window = BrowserWindow.fromWebContents(event.sender)

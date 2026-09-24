@@ -41,6 +41,9 @@ declare global {
     /** What this run actually uses (changing the setting needs a restart). */
     accelerationActive: boolean
     autoUpdate: boolean
+    /** Windows 11 Mica behind the tab strip. */
+    mica: boolean
+    micaSupported: boolean
     platform: string
     version: string
     gpu: Record<
@@ -128,7 +131,7 @@ declare global {
     suggestSearch(engine: string, query: string): Promise<string[]>
     getSystem(): Promise<SystemInfo>
     setSystem(
-      patch: Partial<Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate'>>
+      patch: Partial<Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate' | 'mica'>>
     ): Promise<void>
     /** Restarts Jupiter (to apply the hardware acceleration setting). */
     relaunch(): void
@@ -138,6 +141,8 @@ declare global {
     /** Restarts into the downloaded update. */
     installUpdate(): void
     onUpdateStatus(callback: (status: UpdateStatus) => void): () => void
+    /** Dominant colour of a favicon (#rrggbb), or null. */
+    faviconColor(url: string): Promise<string | null>
     getShields(): Promise<ShieldsState>
     setShieldsEnabled(enabled: boolean): Promise<void>
     setCookieNotices(enabled: boolean): Promise<void>

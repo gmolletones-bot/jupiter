@@ -91,11 +91,12 @@ export function formatTime(
   return { time: `${hours}:${minutes}`, suffix: date.getHours() < 12 ? 'AM' : 'PM' }
 }
 
-// Base tab bar colours; keep in sync with --tabbar-bg / --text in main.css.
+// Base colours; keep in sync with --tabbar-bg / --toolbar-bg / --text in main.css.
 const TAB_BAR = {
   light: { background: '#dfe3e8', text: '#16181d' },
   dark: { background: '#17181b', text: '#e6e7ea' }
 }
+const TOOLBAR = { light: '#f7f8fa', dark: '#26272b' }
 
 function parseHex(hex: string): [number, number, number] {
   const value = hex.replace('#', '')
@@ -116,22 +117,75 @@ export function mix(a: string, b: string, amount: number): string {
   )
 }
 
-/** Black or white, whichever reads better on `background`. */
-export function contrastText(background: string): string {
-  const [r, g, b] = parseHex(background).map((c) => {
+function luminance(color: string): number {
+  const [r, g, b] = parseHex(color).map((c) => {
     const s = c / 255
     return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
   })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? '#0b0d12' : '#ffffff'
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b
 }
 
-export function tabBarColors(
+/** Black or white, whichever reads better on `background`. */
+export function contrastText(background: string): string {
+  return luminance(background) > 0.4 ? '#0b0d12' : '#ffffff'
+}
+
+let colorContext: CanvasRenderingContext2D | null | undefined
+
+/** Any CSS colour ("#abc", "rgb(…)", "teal"…) as #rrggbb; undefined if invalid or see-through. */
+export function toHexColor(css: string | null | undefined): string | undefined {
+  if (!css) return undefined
+  colorContext ??= document.createElement('canvas').getContext('2d')
+  if (!colorContext) return undefined
+  // The canvas normalises colours; an invalid one leaves the previous value.
+  colorContext.fillStyle = '#010203'
+  colorContext.fillStyle = css
+  const value = String(colorContext.fillStyle)
+  if (value === '#010203') return undefined
+  if (value.startsWith('#')) return value
+  const match = value.match(/rgba?\((\d+), (\d+), (\d+)(?:, ([\d.]+))?\)/)
+  if (!match || (match[4] !== undefined && Number(match[4]) < 0.6)) return undefined
+  return toHex([Number(match[1]), Number(match[2]), Number(match[3])])
+}
+
+/** Site colours too close to white or black would just look like a glitch. */
+function usableSiteColor(color: string | undefined): color is string {
+  if (!color) return false
+  const light = luminance(color)
+  return light > 0.03 && light < 0.85
+}
+
+export interface ChromeColors {
+  tabBar: string
+  tabBarText: string
+  toolbar: string
+}
+
+/**
+ * Colours of the tab strip and toolbar: the site's theme colour when there is
+ * a usable one (strong on the tab strip, subtle on the toolbar), otherwise the
+ * accent tint if enabled, otherwise the theme's own greys.
+ */
+export function chromeColors(
   dark: boolean,
   accent: string,
-  tint: boolean
-): { background: string; text: string } {
+  tint: boolean,
+  siteColors: (string | undefined)[] = []
+): ChromeColors {
   const base = dark ? TAB_BAR.dark : TAB_BAR.light
-  return tint ? { ...base, background: mix(accent, base.background, dark ? 0.28 : 0.35) } : base
+  const toolbar = dark ? TOOLBAR.dark : TOOLBAR.light
+  // The page's theme colour first, then its favicon's.
+  const siteColor = siteColors.find(usableSiteColor)
+  if (siteColor) {
+    const tabBar = mix(siteColor, base.background, dark ? 0.55 : 0.7)
+    return {
+      tabBar,
+      tabBarText: contrastText(tabBar),
+      toolbar: mix(siteColor, toolbar, dark ? 0.18 : 0.12)
+    }
+  }
+  const tabBar = tint ? mix(accent, base.background, dark ? 0.28 : 0.35) : base.background
+  return { tabBar, tabBarText: base.text, toolbar }
 }
 
 /** Shrinks an uploaded image so it fits comfortably in local storage. */

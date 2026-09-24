@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ACCENT_COLORS, compressImage, WALLPAPERS } from '../appearance'
 import type { Settings, StoredWallpaper, WallpaperRef } from '../types'
 import BrowserPreview from './BrowserPreview'
@@ -12,6 +12,8 @@ interface PersonalizationSectionProps {
   wallpapers: StoredWallpaper[]
   onChange: (patch: Partial<Settings>) => void
   onWallpapersChange: (wallpapers: StoredWallpaper[]) => void
+  mica: boolean
+  onMicaChange: (on: boolean) => void
 }
 
 const THEMES: { value: BrowserTheme; label: string }[] = [
@@ -24,10 +26,20 @@ function PersonalizationSection({
   settings,
   wallpapers,
   onChange,
-  onWallpapersChange
+  onWallpapersChange,
+  mica,
+  onMicaChange
 }: PersonalizationSectionProps): React.JSX.Element {
   const [uploadError, setUploadError] = useState('')
   const [slot, setSlot] = useState<'day' | 'night'>('day')
+  const [micaSupported, setMicaSupported] = useState(false)
+
+  useEffect(() => {
+    window.api
+      .getSystem()
+      .then((system) => setMicaSupported(system.micaSupported))
+      .catch(console.error)
+  }, [])
   const slotKey = slot === 'day' ? 'wallpaper' : 'nightWallpaper'
   const selected = settings[slotKey]
   const choose = (wallpaper: WallpaperRef): void =>
@@ -215,6 +227,32 @@ function PersonalizationSection({
 
       <section className="settings-card">
         <h2>Interfaz</h2>
+        <div className="settings-row">
+          <div>
+            <div className="settings-label">Colores de cada web</div>
+            <div className="settings-hint">
+              La barra de pestañas se tiñe con el color de la página que estás viendo (YouTube en
+              rojo, Spotify en verde…).
+            </div>
+          </div>
+          <Switch
+            label="Colores de cada web"
+            checked={settings.siteColors}
+            onChange={(siteColors) => onChange({ siteColors })}
+          />
+        </div>
+        {micaSupported && (
+          <div className="settings-row">
+            <div>
+              <div className="settings-label">Efecto Mica (Windows 11)</div>
+              <div className="settings-hint">
+                La barra de pestañas se vuelve translúcida y deja ver tu fondo de escritorio
+                difuminado, como las apps de Windows 11.
+              </div>
+            </div>
+            <Switch label="Efecto Mica" checked={mica} onChange={onMicaChange} />
+          </div>
+        )}
         <div className="settings-row">
           <div>
             <div className="settings-label">Teñir la barra de pestañas</div>

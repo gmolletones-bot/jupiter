@@ -34,6 +34,8 @@ interface SettingsPageProps {
   onSectionChange: (section: SettingsSection) => void
   onChange: (patch: Partial<Settings>) => void
   onWallpapersChange: (wallpapers: StoredWallpaper[]) => void
+  mica: boolean
+  onMicaChange: (on: boolean) => void
   onExtensionsChanged: () => void
   shields: ShieldsState
   onShieldsEnabled: (enabled: boolean) => void
@@ -305,6 +307,8 @@ function SettingsPage(props: SettingsPageProps): React.JSX.Element {
               wallpapers={props.wallpapers}
               onChange={onChange}
               onWallpapersChange={props.onWallpapersChange}
+              mica={props.mica}
+              onMicaChange={props.onMicaChange}
             />
           )}
 

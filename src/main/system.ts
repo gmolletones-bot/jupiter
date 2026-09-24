@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { readFileSync, renameSync, writeFileSync } from 'fs'
 import { join } from 'path'
 
@@ -10,10 +10,12 @@ interface SystemConfig {
   hardwareAcceleration: boolean
   /** Download and install Jupiter updates automatically. */
   autoUpdate: boolean
+  /** Windows 11 Mica material behind the tab strip. */
+  mica: boolean
 }
 
 const FILE = (): string => join(app.getPath('userData'), 'system.json')
-let config: SystemConfig = { hardwareAcceleration: true, autoUpdate: true }
+let config: SystemConfig = { hardwareAcceleration: true, autoUpdate: true, mica: false }
 /** Value in effect for this run; changing it needs a restart. */
 let accelerationAtStartup = true
 
@@ -22,7 +24,8 @@ function loadConfig(): void {
     const data = JSON.parse(readFileSync(FILE(), 'utf-8'))
     config = {
       hardwareAcceleration: data.hardwareAcceleration !== false,
-      autoUpdate: data.autoUpdate !== false
+      autoUpdate: data.autoUpdate !== false,
+      mica: data.mica === true
     }
   } catch {
     // First run: defaults.
@@ -73,6 +76,20 @@ export function applyGpuSwitches(): void {
   }
 }
 
+/** Mica needs Windows 11 and a transparent window background to show through. */
+export function supportsMica(): boolean {
+  if (process.platform !== 'win32') return false
+  const build = Number(process.getSystemVersion().split('.')[2] ?? 0)
+  return build >= 22621
+}
+
+export function applyMica(window: BrowserWindow): void {
+  if (!supportsMica()) return
+  const on = config.mica
+  window.setBackgroundColor(on ? '#00000000' : '#ffffff')
+  window.setBackgroundMaterial(on ? 'mica' : 'none')
+}
+
 type Acceleration = 'hardware' | 'software' | 'off'
 
 /** Chromium's per-feature status ("enabled", "disabled_software"…) simplified. */
@@ -90,6 +107,7 @@ export function registerSystem(): void {
       ...config,
       accelerationActive: accelerationAtStartup,
       platform: process.platform,
+      micaSupported: supportsMica(),
       version: app.getVersion(),
       gpu: {
         videoDecode: describe(gpu.video_decode),
@@ -106,6 +124,10 @@ export function registerSystem(): void {
       config.hardwareAcceleration = patch.hardwareAcceleration
     }
     if (typeof patch.autoUpdate === 'boolean') config.autoUpdate = patch.autoUpdate
+    if (typeof patch.mica === 'boolean') {
+      config.mica = patch.mica
+      for (const window of BrowserWindow.getAllWindows()) applyMica(window)
+    }
     saveConfig()
   })
 

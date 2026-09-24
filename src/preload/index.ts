@@ -51,6 +51,7 @@ const api: BrowserApi = {
       ipcRenderer.removeListener('updater:status', listener)
     }
   },
+  faviconColor: (url) => ipcRenderer.invoke('favicon:color', url),
   getShields: () => ipcRenderer.invoke('shields:get'),
   setShieldsEnabled: (enabled) => ipcRenderer.invoke('shields:set-enabled', enabled),
   updateShieldLists: () => ipcRenderer.invoke('shields:update-lists'),

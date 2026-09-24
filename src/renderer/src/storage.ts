@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   startup: 'home',
   accentColor: '#3b82f6',
   tintTabBar: false,
+  siteColors: true,
   animations: true,
   cornerRadius: 10,
   wallpaper: 'aurora',

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type {
+  DidChangeThemeColorEvent,
   DidFailLoadEvent,
   DidNavigateEvent,
   DidNavigateInPageEvent,
@@ -8,6 +9,7 @@ import type {
   WebviewTag
 } from 'electron'
 import type { Tab } from '../types'
+import { toHexColor } from '../appearance'
 import { exactHostOf } from '../url'
 import { Orbit } from 'lucide-react'
 
@@ -56,15 +58,25 @@ function WebTab({ tab, active, onUpdate, registerWebview }: WebTabProps): React.
       onUpdate(id, {
         ...navigationState(event.url),
         favicon: undefined,
+        themeColor: undefined,
         zoom: webview.getZoomFactor()
       })
+    const onThemeColor = (event: DidChangeThemeColorEvent): void =>
+      onUpdate(id, { themeColor: toHexColor(event.themeColor) })
     const onDomReady = (): void => onUpdate(id, { contentsId: webview.getWebContentsId() })
     const onNavigateInPage = (event: DidNavigateInPageEvent): void => {
       if (event.isMainFrame) onUpdate(id, navigationState(event.url))
     }
     const onTitle = (event: PageTitleUpdatedEvent): void => onUpdate(id, { title: event.title })
-    const onFavicon = (event: PageFaviconUpdatedEvent): void =>
-      onUpdate(id, { favicon: event.favicons[0] })
+    const onFavicon = (event: PageFaviconUpdatedEvent): void => {
+      const favicon = event.favicons[0]
+      onUpdate(id, { favicon, faviconColor: undefined })
+      if (!favicon) return
+      window.api
+        .faviconColor(favicon)
+        .then((color) => onUpdate(id, { faviconColor: color ?? undefined }))
+        .catch(() => undefined)
+    }
     const onStartLoading = (): void => onUpdate(id, { isLoading: true, loadError: undefined })
     const onFailLoad = (event: DidFailLoadEvent): void => {
       // -3 is ERR_ABORTED: the user navigated away or stopped the load; not an error.
@@ -79,6 +91,7 @@ function WebTab({ tab, active, onUpdate, registerWebview }: WebTabProps): React.
     const onStopLoading = (): void => onUpdate(id, { isLoading: false })
 
     webview.addEventListener('dom-ready', onDomReady)
+    webview.addEventListener('did-change-theme-color', onThemeColor)
     webview.addEventListener('did-navigate', onNavigate)
     webview.addEventListener('did-navigate-in-page', onNavigateInPage)
     webview.addEventListener('page-title-updated', onTitle)
@@ -89,6 +102,7 @@ function WebTab({ tab, active, onUpdate, registerWebview }: WebTabProps): React.
 
     return () => {
       webview.removeEventListener('dom-ready', onDomReady)
+      webview.removeEventListener('did-change-theme-color', onThemeColor)
       webview.removeEventListener('did-navigate', onNavigate)
       webview.removeEventListener('did-navigate-in-page', onNavigateInPage)
       webview.removeEventListener('page-title-updated', onTitle)
