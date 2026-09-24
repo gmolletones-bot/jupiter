@@ -1,0 +1,489 @@
+/* ---------- Wallpapers (new tab page, thumbnails and preview) ---------- */
+
+.wallpaper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+}
+
+.wallpaper::before,
+.wallpaper::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.wallpaper-aurora {
+  background: #0b1026;
+}
+
+.wallpaper-aurora::before,
+.wallpaper-aurora::after {
+  inset: -30%;
+  filter: blur(60px);
+}
+
+.wallpaper-aurora::before {
+  background:
+    radial-gradient(circle at 20% 30%, #7c3aed 0, transparent 40%),
+    radial-gradient(circle at 80% 20%, #06b6d4 0, transparent 38%),
+    radial-gradient(circle at 60% 80%, #ec4899 0, transparent 42%);
+  animation: aurora-a 18s ease-in-out infinite alternate;
+}
+
+.wallpaper-aurora::after {
+  background:
+    radial-gradient(circle at 30% 70%, #22c55e 0, transparent 35%),
+    radial-gradient(circle at 75% 60%, #3b82f6 0, transparent 40%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  animation: aurora-b 24s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-a {
+  to {
+    transform: translate(8%, -6%) rotate(20deg) scale(1.1);
+  }
+}
+
+@keyframes aurora-b {
+  to {
+    transform: translate(-10%, 8%) rotate(-25deg) scale(1.15);
+  }
+}
+
+.wallpaper-neon {
+  background: linear-gradient(120deg, #f72585, #7209b7, #3a0ca3, #4361ee, #4cc9f0, #f72585);
+  background-size: 400% 400%;
+  animation: neon-shift 16s ease infinite;
+}
+
+.wallpaper-neon::after {
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to top, #000, transparent 75%);
+}
+
+@keyframes neon-shift {
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.wallpaper-sunset {
+  background: linear-gradient(
+    170deg,
+    #2b1055 0%,
+    #7597de 30%,
+    #ff9a8b 62%,
+    #ff6a88 80%,
+    #ff99ac 100%
+  );
+}
+
+.wallpaper-sunset::before {
+  left: 50%;
+  bottom: -18%;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff3c4 0, #ffd36e 45%, rgba(255, 140, 90, 0) 70%);
+  transform: translateX(-50%);
+  animation: sun-rise 14s ease-in-out infinite alternate;
+}
+
+@keyframes sun-rise {
+  to {
+    bottom: -8%;
+  }
+}
+
+.wallpaper-ocean {
+  background: linear-gradient(180deg, #0f2027, #203a43 40%, #2c5364 70%, #1cb5e0);
+}
+
+.wallpaper-ocean::before {
+  inset: -20%;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(28, 181, 224, 0.45), transparent 50%),
+    radial-gradient(ellipse at 70% 90%, rgba(0, 255, 204, 0.25), transparent 45%);
+  filter: blur(30px);
+  animation: aurora-b 20s ease-in-out infinite alternate;
+}
+
+.wallpaper-forest {
+  background: linear-gradient(160deg, #0b3d2e, #134e5e 40%, #3a7d44 75%, #a8c66c);
+}
+
+.wallpaper-forest::before {
+  inset: -20%;
+  background: radial-gradient(circle at 70% 25%, rgba(255, 255, 200, 0.35), transparent 40%);
+  filter: blur(30px);
+  animation: aurora-a 22s ease-in-out infinite alternate;
+}
+
+.wallpaper-midnight {
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+}
+
+.wallpaper-midnight::before {
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #ffffff, transparent),
+    radial-gradient(1px 1px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 90px 40px, #ffffff, transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 160px 120px, #ffffff, transparent),
+    radial-gradient(1px 1px at 60px 160px, rgba(255, 255, 255, 0.8), transparent);
+  background-size: 200px 200px;
+  animation: twinkle 5s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  to {
+    opacity: 0.35;
+  }
+}
+
+.wallpaper-accent {
+  background:
+    radial-gradient(
+      circle at 20% 15%,
+      color-mix(in srgb, var(--accent) 70%, #ffffff) 0,
+      transparent 45%
+    ),
+    linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 35%, #000000));
+}
+
+.wallpaper-plain {
+  background: var(--page-bg);
+}
+
+/* Small renderings need proportionally smaller blur to keep their colours. */
+.wallpaper-thumb .wallpaper::before,
+.wallpaper-thumb .wallpaper::after,
+.preview .wallpaper::before,
+.preview .wallpaper::after {
+  filter: blur(12px);
+}
+
+/* ---------- New tab page ---------- */
+
+.ntp {
+  overflow: hidden;
+  background: var(--page-bg);
+}
+
+.ntp-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  height: 100%;
+  padding: 24px 24px 72px;
+  overflow-y: auto;
+  color: var(--text);
+}
+
+.ntp-content.on-wallpaper {
+  color: #ffffff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.ntp-hero,
+.ntp-search,
+.ntp-tiles {
+  animation: rise 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.ntp-search {
+  animation-delay: 80ms;
+}
+
+.ntp-tiles {
+  animation-delay: 160ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.ntp-hero {
+  text-align: center;
+}
+
+.ntp-clock {
+  font-size: clamp(64px, 11vw, 128px);
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ntp-greeting {
+  margin-top: 10px;
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.ntp-date {
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.ntp-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(640px, 100%);
+  height: 54px;
+  padding: 0 22px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: calc(var(--radius) * 2.7);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  transition:
+    box-shadow 200ms,
+    border-color 200ms;
+}
+
+.ntp-content:not(.on-wallpaper) .ntp-search {
+  border-color: var(--input-border);
+  background: var(--card-bg);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.ntp-search:focus-within {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--accent) 40%, transparent),
+    0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+.ntp-search-icon {
+  font-size: 22px;
+  opacity: 0.8;
+}
+
+.ntp-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  text-shadow: none;
+  outline: none;
+}
+
+.ntp-search input::placeholder {
+  color: inherit;
+  opacity: 0.7;
+}
+
+.ntp-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 104px);
+  justify-content: center;
+  gap: 12px;
+  width: min(680px, 100%);
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 8px 12px;
+  border: none;
+  border-radius: calc(var(--radius) * 1.4);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 200ms,
+    background-color 200ms;
+}
+
+.tile:hover {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  transform: translateY(-4px);
+}
+
+.ntp-content:not(.on-wallpaper) .tile:hover {
+  background: var(--button-hover);
+}
+
+.tile-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  color: #222222;
+  font-size: 24px;
+  text-shadow: none;
+}
+
+.tile-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+.tile-letter {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tile-add .tile-icon {
+  border: 1.5px dashed currentColor;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+  color: inherit;
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.ntp-content:not(.on-wallpaper) .tile-icon {
+  border: 1px solid var(--toolbar-border);
+}
+
+.tile-title {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tile-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 150ms;
+}
+
+.tile:hover .tile-remove {
+  opacity: 1;
+}
+
+.ntp-customize {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: calc(var(--radius) * 3);
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(14px);
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    transform 200ms,
+    background-color 200ms,
+    box-shadow 200ms;
+}
+
+.ntp-content:not(.on-wallpaper) .ntp-customize {
+  border-color: var(--toolbar-border);
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.ntp-customize:hover {
+  background: var(--accent) !important;
+  color: var(--accent-text) !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: translateY(-2px);
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fade-in 150ms ease;
+}
+
+.ntp-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(380px, calc(100% - 32px));
+  padding: 24px;
+  border-radius: calc(var(--radius) * 1.6);
+  background: var(--card-bg);
+  color: var(--text);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  animation: rise 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ntp-dialog h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.ntp-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.ntp-dialog input {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--input-border);
+  border-radius: calc(var(--radius) * 0.8);
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+}
+
+.ntp-dialog input:focus {
+  border-color: var(--accent);
+}
+
+.ntp-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}

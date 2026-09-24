@@ -1,0 +1,406 @@
+@import './newtab.css';
+@import './settings.css';
+@import './pages.css';
+@import './widgets.css';
+@import './scene.css';
+
+/* The theme setting drives nativeTheme in the main process, which also
+   switches prefers-color-scheme here, so one media query covers it.
+   --accent, --accent-text, --tabbar-bg and --radius are overridden at
+   runtime from the personalization settings (useAppearance). */
+:root {
+  --tabbar-bg: #dfe3e8;
+  --toolbar-bg: #f7f8fa;
+  --toolbar-border: #d8dce1;
+  --tab-hover: #eceff2;
+  --page-bg: #f1f3f5;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #cfd4da;
+  --text: #16181d;
+  --text-muted: #636a75;
+  --button-hover: #e4e7eb;
+  --accent: #3b82f6;
+  --accent-text: #ffffff;
+  --danger: #dc2626;
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tabbar-bg: #17181b;
+    --toolbar-bg: #26272b;
+    --toolbar-border: #34363b;
+    --tab-hover: #1f2023;
+    --page-bg: #1c1d20;
+    --card-bg: #26272b;
+    --input-bg: #1c1d20;
+    --input-border: #3a3c42;
+    --text: #e6e7ea;
+    --text-muted: #9a9ea8;
+    --button-hover: #34363b;
+    --danger: #f87171;
+  }
+}
+
+:root[data-animations='off'] *,
+:root[data-animations='off'] *::before,
+:root[data-animations='off'] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: var(--toolbar-bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 14px;
+}
+
+button {
+  font: inherit;
+}
+
+.browser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------- Tabs ---------- */
+
+/* The tab bar doubles as the window title bar: empty space drags the window,
+   and the titlebar-area env() values keep tabs clear of the window buttons
+   (Windows: right side, macOS: traffic lights on the left). */
+.tabbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+  height: 40px;
+  padding-left: max(8px, env(titlebar-area-x, 0px));
+  padding-right: calc(100vw - env(titlebar-area-x, 0px) - env(titlebar-area-width, 100vw) + 8px);
+  background: var(--tabbar-bg);
+  user-select: none;
+  -webkit-app-region: drag;
+  transition: background-color 250ms;
+}
+
+.tab,
+.tab-new {
+  -webkit-app-region: no-drag;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 1 220px;
+  min-width: 48px;
+  height: 34px;
+  padding: 0 6px 0 12px;
+  border-radius: calc(var(--radius) * 0.8) calc(var(--radius) * 0.8) 0 0;
+  color: var(--text-muted);
+  cursor: default;
+  transition: background-color 120ms;
+}
+
+.tab:hover {
+  background: color-mix(in srgb, var(--toolbar-bg) 45%, transparent);
+}
+
+.tab.active {
+  background: var(--toolbar-bg);
+  color: var(--text);
+}
+
+.tab-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.spinner {
+  border: 2px solid var(--input-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tab-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+
+.tab-close,
+.tab-new {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tab-close {
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+}
+
+.tab-new {
+  align-self: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 4px;
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+.tab-close:hover,
+.tab-new:hover {
+  background: var(--button-hover);
+  color: var(--text);
+}
+
+/* ---------- Toolbar ---------- */
+
+.toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  height: 46px;
+  padding: 0 10px;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--toolbar-border);
+  user-select: none;
+}
+
+.nav-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: min(50%, calc(var(--radius) * 1.6));
+  background: transparent;
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 120ms;
+}
+
+.nav-button:hover:not(:disabled),
+.nav-button.selected {
+  background: var(--button-hover);
+}
+
+.nav-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.extension-button img {
+  width: 18px;
+  height: 18px;
+}
+
+.address-form {
+  flex: 1;
+  margin: 0 6px;
+}
+
+.address-bar {
+  width: 100%;
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--input-border);
+  border-radius: calc(var(--radius) * 1.7);
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 120ms,
+    box-shadow 120ms;
+}
+
+.address-bar::placeholder {
+  color: var(--text-muted);
+}
+
+.address-bar:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.progress {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  animation: progress 1s linear infinite;
+}
+
+@keyframes progress {
+  from {
+    background-position: -50% 0;
+  }
+  to {
+    background-position: 150% 0;
+  }
+}
+
+/* ---------- Page area ---------- */
+
+.content {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+webview.page {
+  background: #ffffff;
+}
+
+/* visibility (not display: none) keeps hidden webviews alive and sized. */
+.page.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ---------- Shared controls ---------- */
+
+.button-primary,
+.button-ghost {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 18px;
+  border-radius: calc(var(--radius) * 0.9);
+  cursor: pointer;
+  transition:
+    transform 150ms,
+    filter 150ms,
+    background-color 150ms;
+}
+
+.button-primary {
+  border: none;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.button-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.button-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.button-ghost {
+  border: 1px solid var(--input-border);
+  background: transparent;
+  color: var(--text);
+}
+
+.button-ghost:hover {
+  background: var(--button-hover);
+}
+
+.switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--input-border);
+  cursor: pointer;
+  transition: background-color 200ms;
+}
+
+.switch.on {
+  background: var(--accent);
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 220ms cubic-bezier(0.3, 1.5, 0.6, 1);
+}
+
+.switch.on .switch-thumb {
+  transform: translateX(20px);
+}
+
+code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--page-bg);
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 12px;
+  word-break: break-all;
+}

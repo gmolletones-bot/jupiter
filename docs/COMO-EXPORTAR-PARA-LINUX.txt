@@ -1,0 +1,183 @@
+==============================================================
+  JUPITER - Cómo generar la versión para Linux
+==============================================================
+
+La versión de Linux (.AppImage y .deb) SOLO se puede generar
+desde Linux: las herramientas que crean esos paquetes no
+funcionan en Windows. Desde este PC la forma más fácil es WSL2,
+un Ubuntu que corre dentro de Windows.
+
+Resultado final (en la carpeta dist/ del proyecto en Linux):
+  - jupiter-1.0.0.AppImage     -> funciona en casi cualquier Linux
+  - jupiter_1.0.0_amd64.deb    -> instalador para Ubuntu / Debian / Mint
+
+
+==============================================================
+  OPCIÓN RÁPIDA: compilar en tu portátil con Linux Mint
+==============================================================
+Si tienes un equipo con Linux (como tu portátil con Linux Mint
+XFCE) no hace falta WSL: se compila directamente ahí.
+
+1) Una sola vez, en una terminal del portátil:
+
+    sudo apt update
+    sudo apt install -y curl git
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    source ~/.bashrc
+    nvm install 24
+
+2) Copia la carpeta mi-navegador al portátil (USB, red o git)
+   SIN las carpetas node_modules, dist y out, por ejemplo a
+   ~/jupiter. Recuerda el PASO 0 (correo en electron-builder.yml).
+
+3) Genera los paquetes:
+
+    cd ~/jupiter
+    npm ci
+    npm run build:linux
+
+4) Instala Jupiter en el propio portátil (el .deb es lo mejor
+   para Mint):
+
+    sudo apt install ./dist/jupiter_1.0.0_amd64.deb
+
+   Aparecerá en el menú de XFCE, en la categoría Internet.
+
+   Para probar cambios sin instalar nada:  npm run dev
+
+Los pasos 1 a 5 de abajo son para hacerlo desde Windows con WSL.
+
+
+--------------------------------------------------------------
+PASO 0 - Antes de empezar (una sola vez)
+--------------------------------------------------------------
+Abre el archivo electron-builder.yml y cambia el correo de
+ejemplo por el tuyo. El paquete .deb no se genera sin él:
+
+    maintainer: Jupiter <tu-correo@ejemplo.com>
+
+
+--------------------------------------------------------------
+PASO 1 - Instalar Ubuntu en Windows (una sola vez)
+--------------------------------------------------------------
+En PowerShell COMO ADMINISTRADOR:
+
+    wsl --install -d Ubuntu
+
+Reinicia el PC. Al volver se abrirá Ubuntu y te pedirá crear
+un usuario y contraseña de Linux (pueden ser distintos a los de
+Windows).
+
+Para abrir Ubuntu más adelante: menú Inicio -> "Ubuntu".
+
+
+--------------------------------------------------------------
+PASO 2 - Instalar Node.js dentro de Ubuntu (una sola vez)
+--------------------------------------------------------------
+Dentro de la ventana de Ubuntu:
+
+    sudo apt update
+    sudo apt install -y curl git rsync
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+    source ~/.bashrc
+    nvm install 24
+    node -v
+
+El último comando debe mostrar v24.x.x.
+
+
+--------------------------------------------------------------
+PASO 3 - Copiar el proyecto a Linux (cada vez que haya cambios)
+--------------------------------------------------------------
+Compilar directamente desde C:\ (/mnt/c) es muy lento y da
+problemas, así que se copia el proyecto a la carpeta de Linux,
+sin node_modules, dist ni out (esas se regeneran):
+
+    rsync -a --delete \
+      --exclude node_modules --exclude dist --exclude out \
+      /mnt/c/Users/SMARTAUT17/Documents/navegador/mi-navegador/ \
+      ~/jupiter/
+
+
+--------------------------------------------------------------
+PASO 4 - Instalar dependencias y generar los paquetes
+--------------------------------------------------------------
+
+    cd ~/jupiter
+    npm ci
+    npm run build:linux
+
+"npm ci" instala las dependencias en su versión para Linux.
+Hazlo siempre después de copiar: las de Windows no sirven.
+
+Tarda unos minutos (la primera vez descarga Electron para Linux).
+Los paquetes quedan en ~/jupiter/dist/
+
+
+--------------------------------------------------------------
+PASO 5 - Traer los paquetes de vuelta a Windows
+--------------------------------------------------------------
+
+    mkdir -p /mnt/c/Users/SMARTAUT17/Documents/navegador/mi-navegador/dist/linux
+    cp ~/jupiter/dist/*.AppImage ~/jupiter/dist/*.deb \
+       /mnt/c/Users/SMARTAUT17/Documents/navegador/mi-navegador/dist/linux/
+
+Quedarán en mi-navegador\dist\linux\ para compartirlos.
+
+
+==============================================================
+  Resumen rápido (cuando ya hiciste los pasos 0, 1 y 2)
+==============================================================
+Abre Ubuntu y pega todo esto de una vez:
+
+    rsync -a --delete --exclude node_modules --exclude dist --exclude out /mnt/c/Users/SMARTAUT17/Documents/navegador/mi-navegador/ ~/jupiter/
+    cd ~/jupiter && npm ci && npm run build:linux
+    mkdir -p /mnt/c/Users/SMARTAUT17/Documents/navegador/mi-navegador/dist/linux
+    cp ~/jupiter/dist/*.AppImage ~/jupiter/dist/*.deb /mnt/c/Users/SMARTAUT17/Documents/navegador/mi-navegador/dist/linux/
+
+
+==============================================================
+  Cómo instalarlo en un equipo con Linux
+==============================================================
+
+Opción A - .deb (recomendada en Ubuntu, Debian, Mint):
+
+    sudo apt install ./jupiter_1.0.0_amd64.deb
+
+  Después aparece "Jupiter" en el menú de aplicaciones.
+  Para desinstalar:  sudo apt remove jupiter
+
+Opción B - .AppImage (cualquier distribución, sin instalar):
+
+    chmod +x jupiter-1.0.0.AppImage
+    ./jupiter-1.0.0.AppImage
+
+  Si en Ubuntu 22.04 o superior no abre, falta una librería:
+
+    sudo apt install -y libfuse2
+
+  Si en Ubuntu 24.04 da un error de "sandbox", es una
+  restricción de seguridad de esa versión con los AppImage de
+  Electron: usa el .deb, que no tiene ese problema.
+
+
+==============================================================
+  Problemas frecuentes
+==============================================================
+
+- "Please specify author 'email'" o similar al generar el .deb
+    -> Falta el PASO 0 (correo en electron-builder.yml).
+
+- "nvm: command not found"
+    -> Cierra y vuelve a abrir Ubuntu, o ejecuta: source ~/.bashrc
+
+- Errores raros de módulos al compilar
+    -> Borra y reinstala:  rm -rf node_modules && npm ci
+
+- Quiero cambiar la versión (ej. 1.1.0)
+    -> Cambia "version" en package.json ANTES de copiar (paso 3).
+       El nombre de los archivos generados cambia con ella.
+
+- Solo quiero el .deb o solo el AppImage
+    -> En electron-builder.yml, bajo linux -> target, deja solo
+       el que quieras.
