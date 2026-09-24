@@ -28,7 +28,7 @@ XFCE) no hace falta WSL: se compila directamente ahí.
 
 2) Copia la carpeta mi-navegador al portátil (USB, red o git)
    SIN las carpetas node_modules, dist y out, por ejemplo a
-   ~/jupiter. Recuerda el PASO 0 (correo en electron-builder.yml).
+   ~/jupiter (o mejor: git clone https://github.com/gmolletones-bot/jupiter.git).
 
 3) Genera los paquetes:
 
@@ -49,12 +49,14 @@ Los pasos 1 a 5 de abajo son para hacerlo desde Windows con WSL.
 
 
 --------------------------------------------------------------
-PASO 0 - Antes de empezar (una sola vez)
+PASO 0 - Correo del paquete (ya configurado)
 --------------------------------------------------------------
-Abre el archivo electron-builder.yml y cambia el correo de
-ejemplo por el tuyo. El paquete .deb no se genera sin él:
+El paquete .deb necesita un correo de responsable. Ya está puesto
+en electron-builder.yml (dirección anónima de GitHub):
 
-    maintainer: Jupiter <tu-correo@ejemplo.com>
+    maintainer: Jupiter <gmolletones-bot@users.noreply.github.com>
+
+No hace falta tocarlo.
 
 
 --------------------------------------------------------------
@@ -164,9 +166,6 @@ Opción B - .AppImage (cualquier distribución, sin instalar):
 ==============================================================
   Problemas frecuentes
 ==============================================================
-
-- "Please specify author 'email'" o similar al generar el .deb
-    -> Falta el PASO 0 (correo en electron-builder.yml).
 
 - "nvm: command not found"
     -> Cierra y vuelve a abrir Ubuntu, o ejecuta: source ~/.bashrc

@@ -34,7 +34,7 @@ linux:
     - AppImage
     - deb
   # .deb packages require a maintainer with an email address.
-  maintainer: Jupiter <tu-correo@ejemplo.com>
+  maintainer: Jupiter <gmolletones-bot@users.noreply.github.com>
   category: Network
   synopsis: Jupiter, un navegador web hecho con Electron y React
 appImage:
