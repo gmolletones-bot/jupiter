@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { hostnameOf } from '../url'
 import Favicon from './Favicon'
+import { History, X } from 'lucide-react'
 
 const PAGE_SIZE = 150
 
@@ -83,7 +84,9 @@ function HistoryPage({ active, onOpen }: HistoryPageProps): React.JSX.Element {
     <div className={active ? 'page list-page' : 'page list-page hidden'}>
       <div className="list-content">
         <header className="list-header">
-          <h1>🕘 Historial</h1>
+          <h1>
+            <History /> Historial
+          </h1>
           <input
             className="list-search"
             type="search"
@@ -114,7 +117,7 @@ function HistoryPage({ active, onOpen }: HistoryPageProps): React.JSX.Element {
 
         {entries.length === 0 ? (
           <div className="empty-state list-empty">
-            <span className="empty-icon">🕘</span>
+            <History className="empty-icon" />
             {query ? 'Nada coincide con tu búsqueda.' : 'Aún no hay nada en el historial.'}
           </div>
         ) : (
@@ -151,7 +154,7 @@ function HistoryPage({ active, onOpen }: HistoryPageProps): React.JSX.Element {
                     title="Quitar del historial"
                     onClick={() => remove(entry.id)}
                   >
-                    ×
+                    <X />
                   </button>
                 </div>
               ))}

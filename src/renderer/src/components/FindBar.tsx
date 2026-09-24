@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FoundInPageEvent, WebviewTag } from 'electron'
+import { ChevronDown, ChevronUp, X } from 'lucide-react'
 
 interface FindBarProps {
   tabId: number
@@ -73,13 +74,13 @@ function FindBar({ tabId, getWebview, focusKey, onClose }: FindBarProps): React.
         {query && result ? `${result.total === 0 ? 0 : result.active}/${result.total}` : ''}
       </span>
       <button title="Anterior (Mayús+Enter)" onClick={() => step(false)}>
-        ˄
+        <ChevronUp />
       </button>
       <button title="Siguiente (Enter)" onClick={() => step(true)}>
-        ˅
+        <ChevronDown />
       </button>
       <button title="Cerrar (Esc)" onClick={onClose}>
-        ×
+        <X />
       </button>
     </div>
   )

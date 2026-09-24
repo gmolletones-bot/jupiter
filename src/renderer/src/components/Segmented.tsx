@@ -1,6 +1,6 @@
 interface SegmentedProps<T extends string> {
   value: T
-  options: { value: T; label: string }[]
+  options: { value: T; label: React.ReactNode }[]
   onChange: (value: T) => void
 }
 

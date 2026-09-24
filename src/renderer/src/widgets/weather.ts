@@ -1,3 +1,17 @@
+import {
+  Cloud,
+  CloudDrizzle,
+  CloudFog,
+  CloudLightning,
+  CloudMoon,
+  CloudRain,
+  CloudSnow,
+  CloudSun,
+  Moon,
+  Sun,
+  Thermometer,
+  type LucideIcon
+} from 'lucide-react'
 import type { Settings, WeatherLocation } from '../types'
 
 // Open-Meteo: free, no API key. https://open-meteo.com
@@ -9,21 +23,21 @@ export interface Weather {
 }
 
 // WMO weather interpretation codes → Spanish description and icons (day, night).
-const CODES: [number[], string, string, string][] = [
-  [[0], 'Despejado', '☀️', '🌙'],
-  [[1], 'Mayormente despejado', '🌤️', '🌙'],
-  [[2], 'Parcialmente nublado', '⛅', '☁️'],
-  [[3], 'Nublado', '☁️', '☁️'],
-  [[45, 48], 'Niebla', '🌫️', '🌫️'],
-  [[51, 53, 55, 56, 57], 'Llovizna', '🌦️', '🌧️'],
-  [[61, 63, 65, 66, 67, 80, 81, 82], 'Lluvia', '🌧️', '🌧️'],
-  [[71, 73, 75, 77, 85, 86], 'Nieve', '🌨️', '🌨️'],
-  [[95, 96, 99], 'Tormenta', '⛈️', '⛈️']
+const CODES: [number[], string, LucideIcon, LucideIcon][] = [
+  [[0], 'Despejado', Sun, Moon],
+  [[1], 'Mayormente despejado', CloudSun, CloudMoon],
+  [[2], 'Parcialmente nublado', CloudSun, CloudMoon],
+  [[3], 'Nublado', Cloud, Cloud],
+  [[45, 48], 'Niebla', CloudFog, CloudFog],
+  [[51, 53, 55, 56, 57], 'Llovizna', CloudDrizzle, CloudDrizzle],
+  [[61, 63, 65, 66, 67, 80, 81, 82], 'Lluvia', CloudRain, CloudRain],
+  [[71, 73, 75, 77, 85, 86], 'Nieve', CloudSnow, CloudSnow],
+  [[95, 96, 99], 'Tormenta', CloudLightning, CloudLightning]
 ]
 
-export function describeWeather(weather: Weather): { text: string; icon: string } {
+export function describeWeather(weather: Weather): { text: string; icon: LucideIcon } {
   const match = CODES.find(([codes]) => codes.includes(weather.code))
-  if (!match) return { text: 'Desconocido', icon: '🌡️' }
+  if (!match) return { text: 'Desconocido', icon: Thermometer }
   return { text: match[1], icon: weather.isDay ? match[2] : match[3] }
 }
 

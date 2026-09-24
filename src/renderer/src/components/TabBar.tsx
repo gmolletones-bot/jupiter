@@ -1,4 +1,5 @@
 import type { Tab } from '../types'
+import { Globe, History, Orbit, Plus, Settings, Star, X } from 'lucide-react'
 
 interface TabBarProps {
   tabs: Tab[]
@@ -10,10 +11,10 @@ interface TabBarProps {
 
 function TabIcon({ tab }: { tab: Tab }): React.JSX.Element {
   if (tab.isLoading) return <span className="tab-icon spinner" />
-  if (tab.kind === 'settings') return <span className="tab-icon">⚙</span>
-  if (tab.kind === 'newtab') return <span className="tab-icon">🪐</span>
-  if (tab.kind === 'history') return <span className="tab-icon">🕘</span>
-  if (tab.kind === 'bookmarks') return <span className="tab-icon">★</span>
+  if (tab.kind === 'settings') return <Settings className="tab-icon" />
+  if (tab.kind === 'newtab') return <Orbit className="tab-icon" />
+  if (tab.kind === 'history') return <History className="tab-icon" />
+  if (tab.kind === 'bookmarks') return <Star className="tab-icon" />
   if (tab.favicon) {
     return (
       <img
@@ -24,7 +25,7 @@ function TabIcon({ tab }: { tab: Tab }): React.JSX.Element {
       />
     )
   }
-  return <span className="tab-icon">🌐</span>
+  return <Globe className="tab-icon" />
 }
 
 function TabBar({ tabs, activeId, onActivate, onClose, onNew }: TabBarProps): React.JSX.Element {
@@ -46,12 +47,12 @@ function TabBar({ tabs, activeId, onActivate, onClose, onNew }: TabBarProps): Re
             onMouseDown={(event) => event.stopPropagation()}
             onClick={() => onClose(tab.id)}
           >
-            ×
+            <X />
           </button>
         </div>
       ))}
       <button className="tab-new" title="Nueva pestaña (Ctrl+T)" onClick={onNew}>
-        +
+        <Plus />
       </button>
     </nav>
   )

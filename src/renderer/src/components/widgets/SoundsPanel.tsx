@@ -1,10 +1,33 @@
 import { useState } from 'react'
+import type { LucideIcon } from 'lucide-react'
 import type { CustomPlaylist } from '../../types'
 import { isNight } from '../../appearance'
 import { type SoundId, SOUNDS } from '../../widgets/ambient'
 import { customToPlaylist, PRESET_PLAYLISTS, type Playlist } from '../../widgets/playlists'
 import type { Ambient } from '../../widgets/useAmbient'
 import AmbientScene from '../AmbientScene'
+import {
+  AudioLines,
+  AudioWaveform,
+  CloudRain,
+  Flame,
+  Music,
+  Play,
+  Radio,
+  Tv,
+  Waves,
+  Wind,
+  X
+} from 'lucide-react'
+
+const SOUND_ICONS: Record<SoundId, LucideIcon> = {
+  rain: CloudRain,
+  fire: Flame,
+  waves: Waves,
+  wind: Wind,
+  white: Radio,
+  brown: AudioWaveform
+}
 
 interface SoundsPanelProps {
   ambient: Ambient
@@ -30,7 +53,7 @@ function PlaylistCard({
         <img className="playlist-thumb" src={playlist.thumbnail} alt="" />
       ) : (
         <span className="playlist-thumb playlist-thumb-icon">
-          {playlist.liveChannel ? '📺' : '🎵'}
+          {playlist.liveChannel ? <Tv /> : <Music />}
         </span>
       )}
       <span className="playlist-info">
@@ -44,7 +67,7 @@ function PlaylistCard({
         <span className="playlist-title">{playlist.title}</span>
         <span className="playlist-subtitle">{playlist.subtitle}</span>
       </span>
-      <span className="playlist-play">{playing ? '♪' : '▶'}</span>
+      <span className="playlist-play">{playing ? <AudioLines /> : <Play />}</span>
     </button>
   )
 }
@@ -77,7 +100,7 @@ function SoundsPanel({
             <p>Sonidos ambientales y tus playlists, en un solo lugar.</p>
           </div>
           <button className="modal-close" title="Cerrar" onClick={onClose}>
-            ×
+            <X />
           </button>
         </header>
 
@@ -114,7 +137,10 @@ function SoundsPanel({
                   return (
                     <div key={sound.id} className={on ? 'sound-card on' : 'sound-card'}>
                       <button className="sound-toggle" onClick={() => ambient.toggle(sound.id)}>
-                        <span className="sound-icon">{sound.icon}</span>
+                        {(() => {
+                          const Icon = SOUND_ICONS[sound.id]
+                          return <Icon className="sound-icon" />
+                        })()}
                         <span>{sound.name}</span>
                       </button>
                       <input

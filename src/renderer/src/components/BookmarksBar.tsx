@@ -11,7 +11,8 @@ function BookmarksBar({ bookmarks, onOpen }: BookmarksBarProps): React.JSX.Eleme
     <nav className="bookmarks-bar">
       {bookmarks.length === 0 ? (
         <span className="bookmarks-bar-hint">
-          Pulsa ☆ en la barra de direcciones (o Ctrl+D) para tener tus sitios favoritos aquí.
+          Pulsa la estrella de la barra de direcciones (o Ctrl+D) para tener tus sitios favoritos
+          aquí.
         </span>
       ) : (
         bookmarks.map((bookmark) => (

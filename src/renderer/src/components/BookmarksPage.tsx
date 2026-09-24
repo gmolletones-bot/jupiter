@@ -3,6 +3,7 @@ import type { Bookmark } from '../types'
 import { hostnameOf } from '../url'
 import Favicon from './Favicon'
 import Switch from './Switch'
+import { Pencil, Star, X } from 'lucide-react'
 
 interface BookmarksPageProps {
   bookmarks: Bookmark[]
@@ -44,7 +45,9 @@ function BookmarksPage({
     <div className={active ? 'page list-page' : 'page list-page hidden'}>
       <div className="list-content">
         <header className="list-header">
-          <h1>★ Marcadores</h1>
+          <h1>
+            <Star /> Marcadores
+          </h1>
           <input
             className="list-search"
             type="search"
@@ -60,10 +63,10 @@ function BookmarksPage({
 
         {visible.length === 0 ? (
           <div className="empty-state list-empty">
-            <span className="empty-icon">☆</span>
+            <Star className="empty-icon" />
             {query
               ? 'Nada coincide con tu búsqueda.'
-              : 'Aún no tienes marcadores. Pulsa ☆ en la barra de direcciones o Ctrl+D.'}
+              : 'Aún no tienes marcadores. Pulsa la estrella de la barra de direcciones o Ctrl+D.'}
           </div>
         ) : (
           <section className="settings-card list-card">
@@ -105,14 +108,14 @@ function BookmarksPage({
                   title="Cambiar nombre"
                   onClick={() => setEditing({ id: bookmark.id, title: bookmark.title })}
                 >
-                  ✎
+                  <Pencil />
                 </button>
                 <button
                   className="list-action"
                   title="Quitar marcador"
                   onClick={() => onRemove(bookmark.id)}
                 >
-                  ×
+                  <X />
                 </button>
               </div>
             ))}

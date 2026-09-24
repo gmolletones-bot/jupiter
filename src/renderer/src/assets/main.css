@@ -404,3 +404,173 @@ code {
   font-size: 12px;
   word-break: break-all;
 }
+
+/* ---------- Icons (Lucide) ----------
+   Icons take the font size of whatever contains them; the rules below only
+   pin the sizes that should not follow the text. */
+
+.lucide {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+}
+
+.nav-button .lucide,
+.ntp-corner-button .lucide {
+  width: 18px;
+  height: 18px;
+}
+
+.tab-icon.lucide {
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+}
+
+.tab.active .tab-icon.lucide {
+  color: var(--accent);
+}
+
+.tab-close .lucide,
+.tile-remove .lucide {
+  width: 13px;
+  height: 13px;
+}
+
+.tab-new .lucide,
+.bookmark-star .lucide,
+.omnibox-icon .lucide,
+.app-menu-check .lucide {
+  width: 17px;
+  height: 17px;
+}
+
+.bookmark-star.on .lucide,
+.omnibox-star.lucide,
+.shields-button.on .lucide {
+  color: var(--accent);
+}
+
+.omnibox-star.lucide {
+  width: 14px;
+  height: 14px;
+}
+
+.zoom-controls .lucide,
+.focus-button .lucide,
+.find-bar button .lucide,
+.modal-close .lucide,
+.list-action .lucide,
+.omnibox-remove .lucide,
+.update-banner-close .lucide {
+  width: 16px;
+  height: 16px;
+}
+
+.mini-player-header .lucide {
+  width: 15px;
+  height: 15px;
+}
+
+.ntp-search-button .lucide {
+  width: 20px;
+  height: 20px;
+}
+
+.settings-nav-icon.lucide {
+  width: 18px;
+  height: 18px;
+}
+
+.settings-card h2 .lucide {
+  width: 15px;
+  height: 15px;
+  margin-right: 4px;
+  vertical-align: -2px;
+}
+
+.list-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.list-header h1 .lucide {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.hero-badge .lucide,
+.ntp-customize .lucide,
+.weather-empty .lucide {
+  vertical-align: -2px;
+}
+
+.segmented button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-icon.lucide {
+  width: 34px;
+  height: 34px;
+}
+
+.extension-icon.lucide {
+  width: 28px;
+  height: 28px;
+  color: var(--text-muted);
+}
+
+.upload-icon.lucide,
+.tile-icon .lucide {
+  width: 26px;
+  height: 26px;
+}
+
+.sound-icon.lucide {
+  width: 32px;
+  height: 32px;
+}
+
+.playlist-thumb-icon .lucide {
+  width: 26px;
+  height: 26px;
+}
+
+.playlist-play .lucide {
+  width: 18px;
+  height: 18px;
+}
+
+.weather-icon.lucide {
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+.about-logo.lucide {
+  width: 64px;
+  height: 64px;
+  color: var(--accent);
+}
+
+.load-error-icon.lucide {
+  width: 56px;
+  height: 56px;
+  color: var(--accent);
+  opacity: 0.85;
+}
+
+.swatch-check {
+  position: absolute;
+  inset: 0;
+  width: 18px;
+  height: 18px;
+  margin: auto;
+  color: #ffffff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+  pointer-events: none;
+}

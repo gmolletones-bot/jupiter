@@ -1,9 +1,30 @@
 import { useEffect, useState } from 'react'
+import type { LucideIcon } from 'lucide-react'
+import {
+  BookmarkPlus,
+  Check,
+  EllipsisVertical,
+  History,
+  LogOut,
+  Maximize,
+  Minus,
+  PanelTop,
+  Plus,
+  Printer,
+  Puzzle,
+  Save,
+  Search,
+  Settings,
+  Star,
+  Trash2,
+  Wrench,
+  ZoomIn
+} from 'lucide-react'
 
 type MenuEntry =
   | {
       action: ShortcutAction
-      icon: string
+      icon: LucideIcon
       label: string
       shortcut?: string
       checkable?: boolean
@@ -14,53 +35,59 @@ type MenuEntry =
   | 'zoom'
 
 const ENTRIES: MenuEntry[] = [
-  { action: 'new-tab', icon: '＋', label: 'Nueva pestaña', shortcut: 'Ctrl+T' },
+  { action: 'new-tab', icon: Plus, label: 'Nueva pestaña', shortcut: 'Ctrl+T' },
   'separator',
-  { action: 'history', icon: '🕘', label: 'Historial', shortcut: 'Ctrl+H' },
-  { action: 'bookmarks', icon: '★', label: 'Marcadores', shortcut: 'Ctrl+Mayús+O' },
+  { action: 'history', icon: History, label: 'Historial', shortcut: 'Ctrl+H' },
+  { action: 'bookmarks', icon: Star, label: 'Marcadores', shortcut: 'Ctrl+Mayús+O' },
   {
     action: 'bookmark-page',
-    icon: '☆',
+    icon: BookmarkPlus,
     label: 'Añadir página a marcadores',
     shortcut: 'Ctrl+D',
     webOnly: true
   },
   {
     action: 'toggle-bookmarks-bar',
-    icon: '▭',
+    icon: PanelTop,
     label: 'Mostrar barra de marcadores',
     shortcut: 'Ctrl+Mayús+B',
     checkable: true
   },
-  { action: 'extensions', icon: '🧩', label: 'Extensiones' },
+  { action: 'extensions', icon: Puzzle, label: 'Extensiones' },
   {
     action: 'clear-data',
-    icon: '🗑',
+    icon: Trash2,
     label: 'Eliminar datos de navegación…',
     shortcut: 'Ctrl+Mayús+Supr'
   },
   'separator',
   'zoom',
   'separator',
-  { action: 'find', icon: '🔍', label: 'Buscar en la página…', shortcut: 'Ctrl+F', webOnly: true },
-  { action: 'print', icon: '🖨', label: 'Imprimir…', shortcut: 'Ctrl+P', webOnly: true },
+  {
+    action: 'find',
+    icon: Search,
+    label: 'Buscar en la página…',
+    shortcut: 'Ctrl+F',
+    webOnly: true
+  },
+  { action: 'print', icon: Printer, label: 'Imprimir…', shortcut: 'Ctrl+P', webOnly: true },
   {
     action: 'save-page',
-    icon: '💾',
+    icon: Save,
     label: 'Guardar página como…',
     shortcut: 'Ctrl+S',
     webOnly: true
   },
   {
     action: 'devtools',
-    icon: '🛠',
+    icon: Wrench,
     label: 'Herramientas para desarrolladores',
     shortcut: 'Ctrl+Mayús+I',
     webOnly: true
   },
   'separator',
-  { action: 'settings', icon: '⚙', label: 'Configuración', shortcut: 'Ctrl+,' },
-  { action: 'quit', icon: '✕', label: 'Salir' }
+  { action: 'settings', icon: Settings, label: 'Configuración', shortcut: 'Ctrl+,' },
+  { action: 'quit', icon: LogOut, label: 'Salir' }
 ]
 
 interface AppMenuProps {
@@ -98,7 +125,7 @@ function AppMenu({ bookmarksBarVisible, isWeb, zoom, onAction }: AppMenuProps): 
         aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
-        ⋮
+        <EllipsisVertical />
       </button>
       {open && (
         <>
@@ -110,7 +137,9 @@ function AppMenu({ bookmarksBarVisible, isWeb, zoom, onAction }: AppMenuProps): 
               if (entry === 'zoom') {
                 return (
                   <div key="zoom" className="app-menu-item app-menu-zoom">
-                    <span className="app-menu-check">🔎</span>
+                    <span className="app-menu-check">
+                      <ZoomIn />
+                    </span>
                     <span className="app-menu-label">Zoom</span>
                     <span className="zoom-controls">
                       <button
@@ -118,7 +147,7 @@ function AppMenu({ bookmarksBarVisible, isWeb, zoom, onAction }: AppMenuProps): 
                         title="Alejar (Ctrl+-)"
                         onClick={() => run('zoom-out', true)}
                       >
-                        −
+                        <Minus />
                       </button>
                       <button
                         className="zoom-value"
@@ -133,11 +162,11 @@ function AppMenu({ bookmarksBarVisible, isWeb, zoom, onAction }: AppMenuProps): 
                         title="Acercar (Ctrl++)"
                         onClick={() => run('zoom-in', true)}
                       >
-                        +
+                        <Plus />
                       </button>
                       <span className="zoom-divider" />
                       <button title="Pantalla completa (F11)" onClick={() => run('fullscreen')}>
-                        ⛶
+                        <Maximize />
                       </button>
                     </span>
                   </div>
@@ -154,7 +183,7 @@ function AppMenu({ bookmarksBarVisible, isWeb, zoom, onAction }: AppMenuProps): 
                   onClick={() => run(entry.action)}
                 >
                   <span className="app-menu-check">
-                    {entry.checkable ? (bookmarksBarVisible ? '✓' : '') : entry.icon}
+                    {entry.checkable ? bookmarksBarVisible && <Check /> : <entry.icon />}
                   </span>
                   <span className="app-menu-label">{entry.label}</span>
                   {entry.shortcut && <span className="app-menu-shortcut">{entry.shortcut}</span>}

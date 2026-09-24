@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Switch from './Switch'
+import { Settings, Shield, ShieldCheck } from 'lucide-react'
 
 interface ShieldsButtonProps {
   /** Hostname of the page in the active tab; empty on internal pages. */
@@ -40,7 +41,7 @@ function ShieldsButton({
         title={active ? `Escudos arriba · ${blocked} bloqueados` : 'Escudos'}
         onClick={() => setOpen(!open)}
       >
-        🛡️
+        {active ? <ShieldCheck /> : <Shield />}
         {active && blocked > 0 && (
           <span className="shields-badge">{blocked > 99 ? '99+' : blocked}</span>
         )}
@@ -99,7 +100,9 @@ function ShieldsButton({
                 onOpenSettings()
               }}
             >
-              <span className="app-menu-check">⚙</span>
+              <span className="app-menu-check">
+                <Settings />
+              </span>
               <span className="app-menu-label">Configuración de privacidad</span>
             </button>
           </div>

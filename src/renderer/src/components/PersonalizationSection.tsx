@@ -5,6 +5,7 @@ import BrowserPreview from './BrowserPreview'
 import Segmented from './Segmented'
 import Switch from './Switch'
 import Wallpaper from './Wallpaper'
+import { Check, ImagePlus, Moon, Sparkles, Sun, X } from 'lucide-react'
 
 interface PersonalizationSectionProps {
   settings: Settings
@@ -64,7 +65,9 @@ function PersonalizationSection({
       <section className="hero-card">
         <div className="hero-glow" />
         <div className="hero-text">
-          <span className="hero-badge">✨ Personalización</span>
+          <span className="hero-badge">
+            <Sparkles /> Personalización
+          </span>
           <h1>Haz que este navegador sea tuyo</h1>
           <p>
             Colores, fondos animados, formas y más. Todo cambia al instante: mira la vista previa.
@@ -103,7 +106,9 @@ function PersonalizationSection({
               style={{ '--swatch': color.value } as React.CSSProperties}
               title={color.name}
               onClick={() => onChange({ accentColor: color.value })}
-            />
+            >
+              {settings.accentColor === color.value && <Check className="swatch-check" />}
+            </button>
           ))}
           <label
             className={isCustomAccent ? 'swatch swatch-custom selected' : 'swatch swatch-custom'}
@@ -114,6 +119,7 @@ function PersonalizationSection({
             }
             title="Elegir otro color"
           >
+            {isCustomAccent && <Check className="swatch-check" />}
             <input
               type="color"
               value={settings.accentColor}
@@ -137,8 +143,22 @@ function PersonalizationSection({
           <Segmented
             value={slot}
             options={[
-              { value: 'day', label: '☀️ Día' },
-              { value: 'night', label: '🌙 Noche' }
+              {
+                value: 'day',
+                label: (
+                  <>
+                    <Sun /> Día
+                  </>
+                )
+              },
+              {
+                value: 'night',
+                label: (
+                  <>
+                    <Moon /> Noche
+                  </>
+                )
+              }
             ]}
             onChange={setSlot}
           />
@@ -179,14 +199,14 @@ function PersonalizationSection({
                   removeWallpaper(image.id)
                 }}
               >
-                ×
+                <X />
               </span>
             </button>
           ))}
 
           <label className="wallpaper-thumb wallpaper-upload">
             <input type="file" accept="image/*" onChange={uploadWallpaper} />
-            <span className="upload-icon">🖼️</span>
+            <ImagePlus className="upload-icon" />
             <span className="wallpaper-name">Subir imagen</span>
           </label>
         </div>

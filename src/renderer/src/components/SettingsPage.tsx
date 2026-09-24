@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { LucideIcon } from 'lucide-react'
 import type {
   SearchEngine,
   Settings,
@@ -12,6 +13,17 @@ import PersonalizationSection from './PersonalizationSection'
 import Switch from './Switch'
 import SystemSection from './SystemSection'
 import WidgetsSection from './WidgetsSection'
+import {
+  House,
+  Info,
+  Orbit,
+  Palette,
+  Puzzle,
+  Search,
+  Settings as SettingsIcon,
+  Shield,
+  ShieldCheck
+} from 'lucide-react'
 
 interface SettingsPageProps {
   settings: Settings
@@ -30,15 +42,15 @@ interface SettingsPageProps {
   updateStatus: UpdateStatus
 }
 
-const SECTIONS: { id: SettingsSection; icon: string; label: string }[] = [
-  { id: 'personalization', icon: '🎨', label: 'Personalización' },
-  { id: 'widgets', icon: '🪐', label: 'Widgets de inicio' },
-  { id: 'home', icon: '🏠', label: 'Inicio y pestañas' },
-  { id: 'search', icon: '🔍', label: 'Buscador' },
-  { id: 'privacy', icon: '🛡️', label: 'Privacidad' },
-  { id: 'extensions', icon: '🧩', label: 'Extensiones' },
-  { id: 'system', icon: '⚙️', label: 'Sistema' },
-  { id: 'about', icon: 'ℹ️', label: 'Acerca de' }
+const SECTIONS: { id: SettingsSection; icon: LucideIcon; label: string }[] = [
+  { id: 'personalization', icon: Palette, label: 'Personalización' },
+  { id: 'widgets', icon: Orbit, label: 'Widgets de inicio' },
+  { id: 'home', icon: House, label: 'Inicio y pestañas' },
+  { id: 'search', icon: Search, label: 'Buscador' },
+  { id: 'privacy', icon: Shield, label: 'Privacidad' },
+  { id: 'extensions', icon: Puzzle, label: 'Extensiones' },
+  { id: 'system', icon: SettingsIcon, label: 'Sistema' },
+  { id: 'about', icon: Info, label: 'Acerca de' }
 ]
 
 const STARTUP_MODES: { value: StartupMode; label: string }[] = [
@@ -80,8 +92,8 @@ function HomeSection({
       <section className="settings-card">
         <h2>Página de inicio</h2>
         <div className="settings-hint card-intro">
-          Se abre al iniciar y con el botón ⌂. Las pestañas nuevas siempre muestran la página de
-          inicio de Jupiter.
+          Se abre al iniciar y con el botón de inicio. Las pestañas nuevas siempre muestran la
+          página de inicio de Jupiter.
         </div>
         <label className="settings-row radio-row">
           <input
@@ -161,14 +173,16 @@ function PrivacySection({
   const label = {
     idle: 'Borrar datos',
     clearing: 'Borrando…',
-    done: 'Datos borrados ✓',
+    done: 'Datos borrados',
     error: 'Error, reintentar'
   }[clearStatus]
 
   return (
     <>
       <section className="settings-card">
-        <h2>🛡️ Escudos</h2>
+        <h2>
+          <ShieldCheck /> Escudos
+        </h2>
         <div className="settings-row">
           <div>
             <div className="settings-label">Bloquear anuncios y rastreadores</div>
@@ -277,7 +291,7 @@ function SettingsPage(props: SettingsPageProps): React.JSX.Element {
             className={section === item.id ? 'settings-nav-item selected' : 'settings-nav-item'}
             onClick={() => onSectionChange(item.id)}
           >
-            <span className="settings-nav-icon">{item.icon}</span>
+            <item.icon className="settings-nav-icon" />
             {item.label}
           </button>
         ))}
@@ -360,7 +374,7 @@ function SettingsPage(props: SettingsPageProps): React.JSX.Element {
 
           {section === 'about' && (
             <section className="settings-card about-card">
-              <div className="about-logo">🪐</div>
+              <Orbit className="about-logo" />
               <h2>Jupiter</h2>
               <div className="settings-hint">
                 Chromium {versions.chrome} · Electron {versions.electron} · Node {versions.node}

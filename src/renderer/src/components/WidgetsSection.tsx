@@ -268,7 +268,7 @@ function WidgetsSection({ settings, onChange }: WidgetsSectionProps): React.JSX.
       <section className="settings-card">
         <h2>Sonidos y música</h2>
         <Row
-          label="Mostrar el botón ♪"
+          label="Mostrar el botón de música"
           hint="Sonidos ambientales y playlists de YouTube y Spotify."
         >
           <Switch

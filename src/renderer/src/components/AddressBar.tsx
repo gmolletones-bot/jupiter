@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import type { Bookmark, SearchEngine, Tab } from '../types'
 import { SEARCH_ENGINES, toUrl } from '../url'
 import Favicon from './Favicon'
+import { Search, Star, X } from 'lucide-react'
 
 interface Suggestion {
   kind: 'page' | 'search'
@@ -349,7 +350,11 @@ function AddressBar({
               onClick={() => activate(item, item.target)}
             >
               <span className="omnibox-icon">
-                {item.kind === 'search' ? '⌕' : <Favicon url={item.target} src={item.favicon} />}
+                {item.kind === 'search' ? (
+                  <Search />
+                ) : (
+                  <Favicon url={item.target} src={item.favicon} />
+                )}
               </span>
               <span className="omnibox-text">
                 {highlight(item.text, words)}
@@ -363,7 +368,7 @@ function AddressBar({
                   </span>
                 )}
               </span>
-              {item.source === 'bookmark' && <span className="omnibox-star">★</span>}
+              {item.source === 'bookmark' && <Star className="omnibox-star" fill="currentColor" />}
               {item.source === 'history' && !item.key.startsWith('inline:') && (
                 <button
                   type="button"
@@ -374,7 +379,7 @@ function AddressBar({
                     void removeFromHistory(item)
                   }}
                 >
-                  ×
+                  <X />
                 </button>
               )}
             </li>

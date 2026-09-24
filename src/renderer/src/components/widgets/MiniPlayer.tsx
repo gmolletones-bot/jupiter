@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Playlist } from '../../widgets/playlists'
+import { ChevronDown, ChevronUp, ExternalLink, Music, X } from 'lucide-react'
 
 interface MiniPlayerProps {
   playlist: Playlist
@@ -17,7 +18,7 @@ function MiniPlayer({ playlist, onOpenInTab, onClose }: MiniPlayerProps): React.
   return (
     <div className={`mini-player mini-player-${playlist.source}${minimized ? ' minimized' : ''}`}>
       <header className="mini-player-header">
-        <span className="mini-player-note">♪</span>
+        <Music className="mini-player-note" />
         <span className="mini-player-title" title={playlist.title}>
           {playlist.title}
         </span>
@@ -25,13 +26,13 @@ function MiniPlayer({ playlist, onOpenInTab, onClose }: MiniPlayerProps): React.
           title={minimized ? 'Mostrar reproductor' : 'Minimizar'}
           onClick={() => setMinimized(!minimized)}
         >
-          {minimized ? '▴' : '▾'}
+          {minimized ? <ChevronUp /> : <ChevronDown />}
         </button>
         <button title="Abrir en una pestaña" onClick={() => onOpenInTab(playlist.url)}>
-          ↗
+          <ExternalLink />
         </button>
         <button title="Cerrar reproductor" onClick={onClose}>
-          ×
+          <X />
         </button>
       </header>
       <webview

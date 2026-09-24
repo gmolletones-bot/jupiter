@@ -571,17 +571,6 @@
     0 6px 22px color-mix(in srgb, var(--swatch) 70%, transparent);
 }
 
-.swatch.selected::after {
-  content: '✓';
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: #ffffff;
-  font-weight: 700;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-}
-
 .swatch-custom {
   background: conic-gradient(#ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
 }

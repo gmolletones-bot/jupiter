@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Puzzle } from 'lucide-react'
 
 interface ExtensionsSectionProps {
   extensions: ExtensionInfo[]
@@ -45,7 +46,7 @@ function ExtensionsSection({ extensions, onChanged }: ExtensionsSectionProps): R
 
         {extensions.length === 0 ? (
           <div className="empty-state">
-            <span className="empty-icon">🧩</span>
+            <Puzzle className="empty-icon" />
             Aún no tienes extensiones.
           </div>
         ) : (
@@ -55,7 +56,7 @@ function ExtensionsSection({ extensions, onChanged }: ExtensionsSectionProps): R
                 {extension.icon ? (
                   <img className="extension-icon" src={extension.icon} alt="" />
                 ) : (
-                  <span className="extension-icon">🧩</span>
+                  <Puzzle className="extension-icon" />
                 )}
                 <div className="extension-info">
                   <div className="settings-label">

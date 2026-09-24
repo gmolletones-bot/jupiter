@@ -3,6 +3,7 @@ import { exactHostOf } from '../url'
 import AddressBar from './AddressBar'
 import AppMenu from './AppMenu'
 import ShieldsButton from './ShieldsButton'
+import { ArrowLeft, ArrowRight, House, Puzzle, RotateCw, Star, X } from 'lucide-react'
 
 interface ToolbarProps {
   tab: Tab
@@ -55,7 +56,7 @@ function Toolbar({
   return (
     <header className="toolbar">
       <button className="nav-button" title="Atrás" disabled={!tab.canGoBack} onClick={onBack}>
-        ←
+        <ArrowLeft />
       </button>
       <button
         className="nav-button"
@@ -63,7 +64,7 @@ function Toolbar({
         disabled={!tab.canGoForward}
         onClick={onForward}
       >
-        →
+        <ArrowRight />
       </button>
       <button
         className="nav-button"
@@ -71,10 +72,10 @@ function Toolbar({
         disabled={!isWeb}
         onClick={onReload}
       >
-        {tab.isLoading ? '✕' : '↻'}
+        {tab.isLoading ? <X /> : <RotateCw />}
       </button>
       <button className="nav-button" title="Página de inicio" onClick={onHome}>
-        ⌂
+        <House />
       </button>
 
       <AddressBar
@@ -94,7 +95,7 @@ function Toolbar({
             title={isBookmarked ? 'Quitar de marcadores (Ctrl+D)' : 'Añadir a marcadores (Ctrl+D)'}
             onClick={onToggleBookmark}
           >
-            {isBookmarked ? '★' : '☆'}
+            <Star fill={isBookmarked ? 'currentColor' : 'none'} />
           </button>
         )}
       </AddressBar>
@@ -114,7 +115,7 @@ function Toolbar({
               })
             }}
           >
-            {extension.icon ? <img src={extension.icon} alt="" /> : '🧩'}
+            {extension.icon ? <img src={extension.icon} alt="" /> : <Puzzle />}
           </button>
         ))}
 

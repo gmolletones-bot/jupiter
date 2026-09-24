@@ -1,4 +1,5 @@
 import type { Pomodoro } from '../../widgets/usePomodoro'
+import { Pause, Play, RotateCcw, SkipForward } from 'lucide-react'
 
 const RADIUS = 54
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
@@ -43,17 +44,17 @@ function FocusWidget({ pomodoro, now }: FocusWidgetProps): React.JSX.Element {
           title={running ? 'Pausar' : 'Empezar'}
           onClick={pomodoro.toggle}
         >
-          {running ? '❚❚' : '▶'}
+          {running ? <Pause fill="currentColor" /> : <Play fill="currentColor" />}
         </button>
         <button className="focus-button" title="Reiniciar" onClick={pomodoro.reset}>
-          ↺
+          <RotateCcw />
         </button>
         <button
           className="focus-button"
           title={phase === 'focus' ? 'Saltar al descanso' : 'Saltar al focus'}
           onClick={pomodoro.skip}
         >
-          ⏭
+          <SkipForward />
         </button>
       </div>
 

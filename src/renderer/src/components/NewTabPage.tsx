@@ -11,6 +11,7 @@ import Wallpaper from './Wallpaper'
 import FocusWidget from './widgets/FocusWidget'
 import SoundsPanel from './widgets/SoundsPanel'
 import WeatherWidget from './widgets/WeatherWidget'
+import { Music, Plus, Search, Sparkles, X } from 'lucide-react'
 
 const MAX_SHORTCUTS = 12
 
@@ -55,7 +56,7 @@ function ShortcutTile({
           onRemove()
         }}
       >
-        ×
+        <X />
       </button>
       <span className="tile-icon">
         <Favicon url={shortcut.url} className="tile-favicon" />
@@ -127,7 +128,7 @@ function NewTabPage({
             title="Sonidos y música"
             onClick={() => setSoundsOpen(true)}
           >
-            ♪
+            <Music />
           </button>
         )}
 
@@ -168,7 +169,7 @@ function NewTabPage({
               spellCheck={false}
             />
             <button className="ntp-search-button" type="submit" title="Buscar">
-              ⌕
+              <Search />
             </button>
           </form>
 
@@ -186,7 +187,9 @@ function NewTabPage({
               ))}
               {settings.shortcuts.length < MAX_SHORTCUTS && (
                 <button className="tile tile-add" onClick={() => setAdding(true)}>
-                  <span className="tile-icon">+</span>
+                  <span className="tile-icon">
+                    <Plus />
+                  </span>
                   <span className="tile-title">Añadir</span>
                 </button>
               )}
@@ -204,7 +207,7 @@ function NewTabPage({
         )}
 
         <button className="ntp-customize" onClick={() => onOpenSettings('personalization')}>
-          ✨ Personalizar
+          <Sparkles /> Personalizar
         </button>
       </div>
 

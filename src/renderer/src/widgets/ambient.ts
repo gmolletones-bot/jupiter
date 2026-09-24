@@ -3,12 +3,12 @@
 // so sounds keep playing while you switch tabs.
 
 export const SOUNDS = [
-  { id: 'rain', name: 'Lluvia', icon: '🌧️' },
-  { id: 'fire', name: 'Chimenea', icon: '🔥' },
-  { id: 'waves', name: 'Olas', icon: '🌊' },
-  { id: 'wind', name: 'Viento', icon: '🍃' },
-  { id: 'white', name: 'Ruido blanco', icon: '📻' },
-  { id: 'brown', name: 'Ruido marrón', icon: '🟤' }
+  { id: 'rain', name: 'Lluvia' },
+  { id: 'fire', name: 'Chimenea' },
+  { id: 'waves', name: 'Olas' },
+  { id: 'wind', name: 'Viento' },
+  { id: 'white', name: 'Ruido blanco' },
+  { id: 'brown', name: 'Ruido marrón' }
 ] as const
 
 export type SoundId = (typeof SOUNDS)[number]['id']

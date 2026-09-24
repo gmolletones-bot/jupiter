@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { X } from 'lucide-react'
 
 interface UpdateBannerProps {
   status: UpdateStatus
@@ -22,7 +23,7 @@ function UpdateBanner({ status }: UpdateBannerProps): React.JSX.Element | null {
         title="Más tarde"
         onClick={() => setDismissed(status.version)}
       >
-        ×
+        <X />
       </button>
     </div>
   )

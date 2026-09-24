@@ -9,6 +9,7 @@ import type {
 } from 'electron'
 import type { Tab } from '../types'
 import { exactHostOf } from '../url'
+import { Orbit } from 'lucide-react'
 
 function errorMessage(code: string, url: string): string {
   let host = url
@@ -114,7 +115,7 @@ function WebTab({ tab, active, onUpdate, registerWebview }: WebTabProps): React.
       {loadError && (
         <div className={active ? 'page load-error' : 'page load-error hidden'}>
           <div className="load-error-box">
-            <div className="load-error-icon">🪐</div>
+            <Orbit className="load-error-icon" />
             <h1>No se puede acceder a este sitio</h1>
             <p>{errorMessage(loadError.code, loadError.url)}</p>
             <code>{loadError.code}</code>

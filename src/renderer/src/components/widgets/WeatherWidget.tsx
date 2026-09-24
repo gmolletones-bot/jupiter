@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Settings, WeatherLocation } from '../../types'
 import { describeWeather, fetchWeather, type Weather } from '../../widgets/weather'
+import { CloudSun } from 'lucide-react'
 
 const REFRESH_MS = 30 * 60_000
 
@@ -35,7 +36,7 @@ function WeatherWidget({ location, unit, onConfigure }: WeatherWidgetProps): Rea
   if (!location) {
     return (
       <button className="weather weather-empty" onClick={onConfigure}>
-        ⛅ Elige tu ciudad para ver el clima
+        <CloudSun /> Elige tu ciudad para ver el clima
       </button>
     )
   }
@@ -47,10 +48,10 @@ function WeatherWidget({ location, unit, onConfigure }: WeatherWidgetProps): Rea
   }
   if (!current.weather) return <div className="weather weather-muted">Cargando el clima…</div>
 
-  const { text, icon } = describeWeather(current.weather)
+  const { text, icon: Icon } = describeWeather(current.weather)
   return (
     <div className="weather" title={`${location.name}, ${location.country}`}>
-      <span className="weather-icon">{icon}</span>
+      <Icon className="weather-icon" />
       <div>
         <div className="weather-temp">
           {current.weather.temperature}°{unit === 'celsius' ? 'C' : 'F'}
