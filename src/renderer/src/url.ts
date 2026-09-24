@@ -39,6 +39,15 @@ export function exactHostOf(url: string): string {
   }
 }
 
+/** Whether the URL's host is one of `sites` or a subdomain of one. */
+export function hostMatches(url: string, sites: string[]): boolean {
+  const host = exactHostOf(url).toLowerCase()
+  return Boolean(host) && sites.some((site) => host === site || host.endsWith(`.${site}`))
+}
+
+/** Error code of the notice shown for sites blocked by Focus mode. */
+export const FOCUS_BLOCKED = 'FOCUS_BLOCKED'
+
 export function hostnameOf(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, '')

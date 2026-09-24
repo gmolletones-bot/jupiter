@@ -173,8 +173,67 @@ function shieldsUpFor(site: string): boolean {
   return config.enabled && !config.allowedSites.includes(site)
 }
 
+// ---------- Daily statistics (for the new tab page card) ----------
+
+const STATS_FILE = (): string => join(app.getPath('userData'), 'shields-stats.json')
+const KEEP_DAYS = 30
+let stats: Record<string, number> = {}
+let statsTimer: NodeJS.Timeout | undefined
+
+/** Local date as YYYY-MM-DD. */
+function dayKey(date = new Date()): string {
+  const pad = (n: number): string => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+function loadStats(): void {
+  try {
+    const data = JSON.parse(readFileSync(STATS_FILE(), 'utf-8'))
+    if (data && typeof data === 'object') stats = data
+  } catch {
+    stats = {}
+  }
+}
+
+function saveStats(): void {
+  statsTimer = undefined
+  const keep = new Set(
+    Array.from({ length: KEEP_DAYS }, (_, i) => dayKey(new Date(Date.now() - i * 86_400_000)))
+  )
+  for (const day of Object.keys(stats)) if (!keep.has(day)) delete stats[day]
+  try {
+    writeFileSync(`${STATS_FILE()}.tmp`, JSON.stringify(stats))
+    renameSync(`${STATS_FILE()}.tmp`, STATS_FILE())
+  } catch (error) {
+    console.error('No se pudieron guardar las estadísticas de los escudos:', error)
+  }
+}
+
+/** Blocked requests of the last 7 days, oldest first. */
+function lastWeek(): { day: string; count: number }[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const day = dayKey(new Date(Date.now() - (6 - i) * 86_400_000))
+    return { day, count: stats[day] ?? 0 }
+  })
+}
+
+// ---------- Focus mode: distracting sites blocked while the timer runs ----------
+
+let focusBlock: { sites: string[]; until: number } | null = null
+
+function blockedByFocus(url: string): boolean {
+  if (!focusBlock || Date.now() > focusBlock.until) return false
+  // The mini player loads YouTube/Spotify embeds as pages: those stay allowed.
+  if (/\/embed\//.test(url)) return false
+  const host = hostOf(url).toLowerCase()
+  return focusBlock.sites.some((site) => host === site || host.endsWith(`.${site}`))
+}
+
 function countBlocked(contents: WebContents | undefined, contentsId: number | undefined): void {
   totalBlocked++
+  const today = dayKey()
+  stats[today] = (stats[today] ?? 0) + 1
+  statsTimer ??= setTimeout(saveStats, 5000)
   if (!contents || contentsId === undefined) return
   const count = (countOf.get(contentsId) ?? 0) + 1
   countOf.set(contentsId, count)
@@ -315,7 +374,16 @@ function installListeners(target: Session): void {
   target.webRequest.onBeforeRequest({ urls: ['*://*/*'] }, (details, callback) => {
     // Always answer, even if something below throws, or the request would hang.
     try {
-      if (details.resourceType === 'mainFrame') return callback({})
+      if (details.resourceType === 'mainFrame') {
+        if (!blockedByFocus(details.url)) return callback({})
+        // A cancelled page load fires no 'did-fail-load' in the webview, so the
+        // UI is told directly which tab to show the "blocked by Focus" notice in.
+        const host = details.webContents?.hostWebContents
+        if (host && !host.isDestroyed()) {
+          host.send('focus:blocked', details.webContentsId, details.url)
+        }
+        return callback({ cancel: true })
+      }
       const site = siteFor(details.webContentsId, details.webContents?.getURL() ?? '')
       if (!shieldsUpFor(site)) return callback({})
 
@@ -378,6 +446,33 @@ function scriptletsFor(contentsId: number, url: string): string[] {
 
 export function registerShields(target: Session, shieldsPreload: string): void {
   loadConfig()
+  loadStats()
+  app.on('before-quit', () => {
+    if (statsTimer) {
+      clearTimeout(statsTimer)
+      saveStats()
+    }
+  })
+
+  ipcMain.handle('shields:stats', () => lastWeek())
+
+  ipcMain.on('focus:set-blocking', (_, sites: unknown, until: unknown) => {
+    focusBlock =
+      Array.isArray(sites) && typeof until === 'number'
+        ? {
+            sites: sites
+              .filter((site): site is string => typeof site === 'string')
+              .map((site) =>
+                site
+                  .trim()
+                  .toLowerCase()
+                  .replace(/^www\./, '')
+              )
+              .filter(Boolean),
+            until
+          }
+        : null
+  })
   browserSession = target
   installListeners(target)
 

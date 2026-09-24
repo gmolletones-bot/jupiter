@@ -73,6 +73,11 @@ export interface Settings {
   showFocus: boolean
   focusMinutes: number
   breakMinutes: number
+  /** Block distracting sites while a focus period is running. */
+  focusBlockSites: boolean
+  focusBlockedSites: string[]
+  /** Weekly ad & tracker statistics card on the new tab page. */
+  showShieldStats: boolean
   showSounds: boolean
   customPlaylists: CustomPlaylist[]
   showShortcuts: boolean

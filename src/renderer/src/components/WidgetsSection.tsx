@@ -157,6 +157,49 @@ function PlaylistManager({ settings, onChange }: WidgetsSectionProps): React.JSX
   )
 }
 
+function BlockedSitesEditor({
+  sites,
+  onChange
+}: {
+  sites: string[]
+  onChange: (sites: string[]) => void
+}): React.JSX.Element {
+  const [draft, setDraft] = useState(sites.join('\n'))
+
+  const commit = (): void => {
+    const next = draft
+      .split(/[\s,]+/)
+      .map((site) =>
+        site
+          .trim()
+          .toLowerCase()
+          .replace(/^https?:\/\//, '')
+          .replace(/^www\./, '')
+          .replace(/\/.*$/, '')
+      )
+      .filter((site, index, all) => site && all.indexOf(site) === index)
+    setDraft(next.join('\n'))
+    onChange(next)
+  }
+
+  return (
+    <div className="settings-row blocked-sites">
+      <div>
+        <div className="settings-label">Webs bloqueadas</div>
+        <div className="settings-hint">Una por línea. Incluye sus subdominios.</div>
+      </div>
+      <textarea
+        className="settings-input"
+        rows={5}
+        value={draft}
+        spellCheck={false}
+        onChange={(event) => setDraft(event.target.value)}
+        onBlur={commit}
+      />
+    </div>
+  )
+}
+
 function WidgetsSection({ settings, onChange }: WidgetsSectionProps): React.JSX.Element {
   const minutes = (value: string, min: number, max: number): number =>
     Math.min(max, Math.max(min, Math.round(Number(value) || min)))
@@ -253,6 +296,22 @@ function WidgetsSection({ settings, onChange }: WidgetsSectionProps): React.JSX.
             onChange={(event) => onChange({ focusMinutes: minutes(event.target.value, 5, 120) })}
           />
         </Row>
+        <Row
+          label="Bloquear webs que distraen"
+          hint="Mientras corre el Focus no se pueden abrir. Las pestañas ya abiertas no se tocan."
+        >
+          <Switch
+            label="Bloquear webs que distraen"
+            checked={settings.focusBlockSites}
+            onChange={(focusBlockSites) => onChange({ focusBlockSites })}
+          />
+        </Row>
+        {settings.focusBlockSites && (
+          <BlockedSitesEditor
+            sites={settings.focusBlockedSites}
+            onChange={(focusBlockedSites) => onChange({ focusBlockedSites })}
+          />
+        )}
         <Row label="Minutos de descanso">
           <input
             className="settings-input number-input"
@@ -282,6 +341,20 @@ function WidgetsSection({ settings, onChange }: WidgetsSectionProps): React.JSX.
           canción de Spotify.
         </div>
         <PlaylistManager settings={settings} onChange={onChange} />
+      </section>
+
+      <section className="settings-card">
+        <h2>Estadísticas de los escudos</h2>
+        <Row
+          label="Mostrar la tarjeta de estadísticas"
+          hint="Anuncios y rastreadores bloqueados en la última semana, y lo que te has ahorrado."
+        >
+          <Switch
+            label="Mostrar la tarjeta de estadísticas"
+            checked={settings.showShieldStats}
+            onChange={(showShieldStats) => onChange({ showShieldStats })}
+          />
+        </Row>
       </section>
 
       <section className="settings-card">

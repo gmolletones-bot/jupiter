@@ -82,7 +82,15 @@ import type {
   Tab
 } from './types'
 import { useAppearance } from './useAppearance'
-import { exactHostOf, internalPageOf, SEARCH_ENGINES, toUrl } from './url'
+import {
+  exactHostOf,
+  FOCUS_BLOCKED,
+  hostMatches,
+  internalPageOf,
+  NEW_TAB_URL,
+  SEARCH_ENGINES,
+  toUrl
+} from './url'
 import { embedForVideo, type Playlist } from './widgets/playlists'
 import type { SoundId } from './widgets/ambient'
 import { useAmbient } from './widgets/useAmbient'
@@ -118,6 +126,25 @@ function App(): React.JSX.Element {
   // Widgets live here, not in the new tab page, so they keep going across tabs.
   const pomodoro = usePomodoro(settings.focusMinutes, settings.breakMinutes)
   const ambient = useAmbient()
+  // Distracting sites are blocked only while a focus period is running.
+  const focusBlockUntil =
+    settings.focusBlockSites && pomodoro.phase === 'focus' && pomodoro.endsAt !== null
+      ? pomodoro.endsAt
+      : null
+  const focusBlocks = (url: string): boolean =>
+    focusBlockUntil !== null && hostMatches(url, settings.focusBlockedSites)
+  const blockedNotice = (url: string): Partial<Tab> => ({
+    address: url,
+    title: exactHostOf(url) || url,
+    favicon: undefined,
+    isLoading: false,
+    loadError: { url, code: FOCUS_BLOCKED }
+  })
+  /** A web tab for `url`, or one showing the Focus notice without loading it. */
+  const webTab = (url: string): Tab =>
+    focusBlocks(url)
+      ? { ...createWebTab(url), initialUrl: 'about:blank', ...blockedNotice(url) }
+      : createWebTab(url)
 
   const activeTab = tabs.find((tab) => tab.id === activeId) ?? tabs[0]
   const isWebTab = activeTab.kind === 'web'
@@ -194,13 +221,17 @@ function App(): React.JSX.Element {
       openInternalPage(page)
       return
     }
-    const next = createTab(url)
+    const next = internalPageOf(url) || url === NEW_TAB_URL ? createTab(url) : webTab(url)
     // Internal pages, or leaving one, swap the tab; web-to-web stays in the same webview.
     if (activeTab.kind !== 'web' || next.kind !== 'web') {
       dispatch({ type: 'replace', id: activeTab.id, tab: next })
       return
     }
-    updateTab(activeTab.id, { address: url })
+    if (focusBlocks(url)) {
+      updateTab(activeTab.id, blockedNotice(url))
+      return
+    }
+    updateTab(activeTab.id, { address: url, loadError: undefined })
     withActiveWebview((webview) => {
       // Load errors are shown by the page itself, so the rejection needs no handling here.
       webview.loadURL(url).catch(() => {})
@@ -210,7 +241,7 @@ function App(): React.JSX.Element {
 
   /** Opens a saved link: in this tab, or in a background tab (Ctrl/middle click). */
   const openLink = (url: string, inBackground: boolean): void => {
-    if (inBackground) openTab(createWebTab(url), false)
+    if (inBackground) openTab(webTab(url), false)
     else navigate(url)
   }
 
@@ -283,8 +314,10 @@ function App(): React.JSX.Element {
     withActiveWebview((webview) => webview.reload())
   }
 
-  const reload = (): void =>
+  const reload = (): void => {
+    if (activeTab.loadError) updateTab(activeTab.id, { loadError: undefined })
     withActiveWebview((webview) => (activeTab.isLoading ? webview.stop() : webview.reload()))
+  }
 
   const focusAddressBar = (): void => {
     addressRef.current?.focus()
@@ -592,11 +625,20 @@ function App(): React.JSX.Element {
 
   useEffect(() => window.api.onShortcut((action) => onShortcut(action)), [])
 
+  const onOpenInNewTab = useEffectEvent((url: string, activate: boolean) =>
+    dispatch({ type: 'open', tab: webTab(url), activate })
+  )
+
+  useEffect(() => window.api.onOpenInNewTab((url, activate) => onOpenInNewTab(url, activate)), [])
+
+  // A link inside a page led to a blocked site: show the notice in that tab.
+  const onFocusBlocked = useEffectEvent((contentsId: number, url: string) => {
+    const tab = tabs.find((candidate) => candidate.contentsId === contentsId)
+    if (tab) updateTab(tab.id, blockedNotice(url))
+  })
+
   useEffect(
-    () =>
-      window.api.onOpenInNewTab((url, activate) =>
-        dispatch({ type: 'open', tab: createWebTab(url), activate })
-      ),
+    () => window.api.onFocusBlocked((contentsId, url) => onFocusBlocked(contentsId, url)),
     []
   )
 
@@ -609,6 +651,12 @@ function App(): React.JSX.Element {
   useEffect(() => window.api.onSearchInNewTab((text) => onSearchInNewTab(text)), [])
 
   useEffect(refreshExtensions, [refreshExtensions])
+
+  const blockedSitesKey = settings.focusBlockedSites.join(',')
+  useEffect(() => {
+    if (focusBlockUntil === null) window.api.setFocusBlocking(null)
+    else window.api.setFocusBlocking(blockedSitesKey.split(',').filter(Boolean), focusBlockUntil)
+  }, [focusBlockUntil, blockedSitesKey])
 
   useEffect(() => {
     window.api
@@ -659,6 +707,7 @@ function App(): React.JSX.Element {
             key={tab.id}
             tab={tab}
             active={active}
+            focusBlockUntil={focusBlockUntil}
             onUpdate={updateTab}
             registerWebview={registerWebview}
           />

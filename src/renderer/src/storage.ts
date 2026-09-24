@@ -35,6 +35,17 @@ export const DEFAULT_SETTINGS: Settings = {
   showFocus: true,
   focusMinutes: 25,
   breakMinutes: 5,
+  focusBlockSites: true,
+  focusBlockedSites: [
+    'facebook.com',
+    'instagram.com',
+    'x.com',
+    'twitter.com',
+    'tiktok.com',
+    'reddit.com',
+    'netflix.com'
+  ],
+  showShieldStats: true,
   showSounds: true,
   customPlaylists: [],
   showShortcuts: true,

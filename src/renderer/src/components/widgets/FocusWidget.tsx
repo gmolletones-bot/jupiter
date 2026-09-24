@@ -1,5 +1,5 @@
 import type { Pomodoro } from '../../widgets/usePomodoro'
-import { Pause, Play, RotateCcw, SkipForward } from 'lucide-react'
+import { Pause, Play, RotateCcw, ShieldBan, SkipForward } from 'lucide-react'
 
 const RADIUS = 54
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
@@ -9,9 +9,11 @@ interface FocusWidgetProps {
   pomodoro: Pomodoro
   /** Current time, so the countdown re-renders every second. */
   now: Date
+  /** Distracting sites are being blocked right now. */
+  blocking?: boolean
 }
 
-function FocusWidget({ pomodoro, now }: FocusWidgetProps): React.JSX.Element {
+function FocusWidget({ pomodoro, now, blocking = false }: FocusWidgetProps): React.JSX.Element {
   const { phase, endsAt, remaining, duration, completed } = pomodoro
   const running = endsAt !== null
   const left = running ? Math.max(0, endsAt - now.getTime()) : (remaining ?? duration)
@@ -57,6 +59,12 @@ function FocusWidget({ pomodoro, now }: FocusWidgetProps): React.JSX.Element {
           <SkipForward />
         </button>
       </div>
+
+      {blocking && (
+        <div className="focus-blocking" title="Configurable en Widgets de inicio">
+          <ShieldBan /> Webs que distraen bloqueadas
+        </div>
+      )}
 
       <div className="focus-sessions" title="Sesiones completadas">
         {completed % SESSIONS_PER_ROUND}/{SESSIONS_PER_ROUND}

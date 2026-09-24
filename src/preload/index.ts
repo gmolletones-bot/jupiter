@@ -56,6 +56,16 @@ const api: BrowserApi = {
   setShieldsEnabled: (enabled) => ipcRenderer.invoke('shields:set-enabled', enabled),
   updateShieldLists: () => ipcRenderer.invoke('shields:update-lists'),
   setCookieNotices: (enabled) => ipcRenderer.invoke('shields:set-cookie-notices', enabled),
+  getShieldStats: () => ipcRenderer.invoke('shields:stats'),
+  setFocusBlocking: (sites, until) => ipcRenderer.send('focus:set-blocking', sites, until),
+  onFocusBlocked: (callback) => {
+    const listener = (_event: IpcRendererEvent, contentsId: number, url: string): void =>
+      callback(contentsId, url)
+    ipcRenderer.on('focus:blocked', listener)
+    return () => {
+      ipcRenderer.removeListener('focus:blocked', listener)
+    }
+  },
   setSiteShields: (site, shieldsUp) => ipcRenderer.invoke('shields:set-site', site, shieldsUp),
   onShieldsBlocked: (callback) => {
     const listener = (_event: IpcRendererEvent, contentsId: number, count: number): void =>

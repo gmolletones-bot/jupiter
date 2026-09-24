@@ -151,6 +151,12 @@ declare global {
     updateShieldLists(): Promise<void>
     /** Shields up (block) or down (allow everything) on one site. */
     setSiteShields(site: string, shieldsUp: boolean): Promise<void>
+    /** Blocked ads and trackers per day, last 7 days, oldest first. */
+    getShieldStats(): Promise<{ day: string; count: number }[]>
+    /** A page load was blocked by Focus mode, in the tab with this webContents id. */
+    onFocusBlocked(callback: (contentsId: number, url: string) => void): () => void
+    /** Block these sites (and subdomains) until `until`; null stops blocking. */
+    setFocusBlocking(sites: string[] | null, until?: number): void
     /** Blocked-request count of a tab's page, by the tab's webContents id. */
     onShieldsBlocked(callback: (contentsId: number, count: number) => void): () => void
     toggleFullscreen(): void

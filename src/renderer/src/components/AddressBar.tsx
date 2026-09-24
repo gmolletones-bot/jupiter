@@ -315,7 +315,9 @@ function AddressBar({
               className={index === selected ? 'omnibox-item selected' : 'omnibox-item'}
               // Keep focus in the input so blur doesn't close the list first.
               onMouseDown={(event) => event.preventDefault()}
-              onMouseEnter={() => setSelected(index)}
+              // Only real movement selects: a still pointer under the list appearing
+              // must not replace what the user is typing.
+              onMouseMove={() => index !== selected && setSelected(index)}
               onClick={() => activate(item, item.target)}
             >
               <span className="omnibox-icon">

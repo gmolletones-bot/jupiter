@@ -9,6 +9,7 @@ import type { Pomodoro } from '../widgets/usePomodoro'
 import Favicon from './Favicon'
 import Wallpaper from './Wallpaper'
 import FocusWidget from './widgets/FocusWidget'
+import ShieldStatsCard from './widgets/ShieldStatsCard'
 import SoundsPanel from './widgets/SoundsPanel'
 import WeatherWidget from './widgets/WeatherWidget'
 import { Music, Plus, Search, Sparkles, X } from 'lucide-react'
@@ -197,7 +198,19 @@ function NewTabPage({
           )}
         </main>
 
-        {settings.showFocus && <FocusWidget pomodoro={pomodoro} now={now} />}
+        {settings.showFocus && (
+          <FocusWidget
+            pomodoro={pomodoro}
+            now={now}
+            blocking={
+              settings.focusBlockSites && pomodoro.phase === 'focus' && pomodoro.endsAt !== null
+            }
+          />
+        )}
+
+        {settings.showShieldStats && (
+          <ShieldStatsCard active={active} onOpen={() => onOpenSettings('privacy')} />
+        )}
 
         {settings.showClock && settings.greetingStyle === 'handwritten' && (
           <div className="ntp-handwritten">
