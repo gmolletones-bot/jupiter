@@ -27,6 +27,28 @@ declare global {
     | 'clear-data'
     | 'quit'
 
+  type UpdateStatus =
+    | { state: 'dev' | 'idle' | 'checking' | 'up-to-date'; version?: string }
+    | { state: 'available' | 'downloading'; version?: string; percent?: number }
+    | { state: 'downloaded'; version: string }
+    | { state: 'error'; error: string; version?: string }
+
+  /** 'hardware': done by the GPU; 'software': by the CPU; 'off': unavailable. */
+  type Acceleration = 'hardware' | 'software' | 'off'
+
+  interface SystemInfo {
+    hardwareAcceleration: boolean
+    /** What this run actually uses (changing the setting needs a restart). */
+    accelerationActive: boolean
+    autoUpdate: boolean
+    platform: string
+    version: string
+    gpu: Record<
+      'videoDecode' | 'videoEncode' | 'rasterization' | 'compositing' | 'webgl',
+      Acceleration
+    >
+  }
+
   interface HistorySuggestion {
     url: string
     title: string
@@ -104,6 +126,18 @@ declare global {
     suggestHistory(query: string, limit: number): Promise<HistorySuggestion[]>
     /** Search engine suggestions for a partial query ('google' | 'duckduckgo' | 'bing'). */
     suggestSearch(engine: string, query: string): Promise<string[]>
+    getSystem(): Promise<SystemInfo>
+    setSystem(
+      patch: Partial<Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate'>>
+    ): Promise<void>
+    /** Restarts Jupiter (to apply the hardware acceleration setting). */
+    relaunch(): void
+    getUpdateStatus(): Promise<UpdateStatus>
+    checkForUpdates(): Promise<void>
+    downloadUpdate(): Promise<void>
+    /** Restarts into the downloaded update. */
+    installUpdate(): void
+    onUpdateStatus(callback: (status: UpdateStatus) => void): () => void
     getShields(): Promise<ShieldsState>
     setShieldsEnabled(enabled: boolean): Promise<void>
     setCookieNotices(enabled: boolean): Promise<void>

@@ -40,6 +40,9 @@ linux:
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
+# Installers are published as GitHub Releases, where Jupiter looks for updates.
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: gmolletones-bot
+  repo: jupiter
+  releaseType: release

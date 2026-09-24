@@ -40,6 +40,20 @@ npm run build:linux
 
 Guía paso a paso para Linux (incluido Linux Mint y WSL): [docs/COMO-EXPORTAR-PARA-LINUX.txt](docs/COMO-EXPORTAR-PARA-LINUX.txt).
 
+## Publicar una versión
+
+Los instaladores se generan en GitHub y Jupiter se actualiza solo desde las
+[Releases](https://github.com/gmolletones-bot/jupiter/releases):
+
+```bash
+npm version minor        # 1.0.0 -> 1.1.0 (o "patch" para 1.0.1); crea el commit y la etiqueta
+git push --follow-tags   # GitHub compila Windows y Linux y publica la Release
+```
+
+Las copias instaladas descargan la versión nueva en segundo plano y avisan para reiniciar
+(Configuración → Sistema). Dependabot propone cada lunes actualizar Electron y el resto de
+dependencias.
+
 ## Estructura
 
 - `src/main/`: proceso principal (ventana, pestañas, historial, extensiones, bloqueador).

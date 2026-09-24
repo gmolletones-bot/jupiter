@@ -8,6 +8,7 @@ import NewTabPage from './components/NewTabPage'
 import MiniPlayer from './components/widgets/MiniPlayer'
 import SettingsPage from './components/SettingsPage'
 import TabBar from './components/TabBar'
+import UpdateBanner from './components/UpdateBanner'
 import Toolbar from './components/Toolbar'
 import WebTab from './components/WebTab'
 import {
@@ -46,6 +47,7 @@ function App(): React.JSX.Element {
   const [wallpapers, setWallpapers] = useState(loadWallpapers)
   const [playlist, setPlaylist] = useState<Playlist | null>(null)
   const [notice, setNotice] = useState('')
+  const [updateStatus, setUpdateStatus] = useState<UpdateStatus>({ state: 'idle' })
   const [shields, setShields] = useState<ShieldsState>({
     enabled: true,
     allowedSites: [],
@@ -331,6 +333,11 @@ function App(): React.JSX.Element {
   useEffect(refreshExtensions, [refreshExtensions])
 
   useEffect(() => {
+    window.api.getUpdateStatus().then(setUpdateStatus).catch(console.error)
+    return window.api.onUpdateStatus(setUpdateStatus)
+  }, [])
+
+  useEffect(() => {
     window.api.getShields().then(setShields).catch(console.error)
     return window.api.onShieldsBlocked((contentsId, count) =>
       setBlockedCounts((current) => ({ ...current, [contentsId]: count }))
@@ -404,6 +411,7 @@ function App(): React.JSX.Element {
             onShieldsEnabled={setShieldsEnabled}
             onSetSiteShields={setSiteShields}
             onShieldsChanged={refreshShields}
+            updateStatus={updateStatus}
           />
         )
       case 'history':
@@ -484,6 +492,7 @@ function App(): React.JSX.Element {
           />
         )}
         {notice && <div className="toast">{notice}</div>}
+        <UpdateBanner status={updateStatus} />
       </main>
     </div>
   )

@@ -37,6 +37,20 @@ const api: BrowserApi = {
   suggestHistory: (query, limit) => ipcRenderer.invoke('history:suggest', query, limit),
   suggestSearch: (engine, query) => ipcRenderer.invoke('suggest:search', engine, query),
   youtubeLiveId: (handle) => ipcRenderer.invoke('youtube:live-id', handle),
+  getSystem: () => ipcRenderer.invoke('system:get'),
+  setSystem: (patch) => ipcRenderer.invoke('system:set', patch),
+  relaunch: () => ipcRenderer.send('system:relaunch'),
+  getUpdateStatus: () => ipcRenderer.invoke('updater:get'),
+  checkForUpdates: () => ipcRenderer.invoke('updater:check'),
+  downloadUpdate: () => ipcRenderer.invoke('updater:download'),
+  installUpdate: () => ipcRenderer.send('updater:install'),
+  onUpdateStatus: (callback) => {
+    const listener = (_event: IpcRendererEvent, status: UpdateStatus): void => callback(status)
+    ipcRenderer.on('updater:status', listener)
+    return () => {
+      ipcRenderer.removeListener('updater:status', listener)
+    }
+  },
   getShields: () => ipcRenderer.invoke('shields:get'),
   setShieldsEnabled: (enabled) => ipcRenderer.invoke('shields:set-enabled', enabled),
   updateShieldLists: () => ipcRenderer.invoke('shields:update-lists'),

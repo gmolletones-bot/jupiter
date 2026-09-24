@@ -10,6 +10,7 @@ import { NEW_TAB_URL, SEARCH_ENGINES, toUrl } from '../url'
 import ExtensionsSection from './ExtensionsSection'
 import PersonalizationSection from './PersonalizationSection'
 import Switch from './Switch'
+import SystemSection from './SystemSection'
 import WidgetsSection from './WidgetsSection'
 
 interface SettingsPageProps {
@@ -26,6 +27,7 @@ interface SettingsPageProps {
   onShieldsEnabled: (enabled: boolean) => void
   onSetSiteShields: (site: string, shieldsUp: boolean) => void
   onShieldsChanged: () => void
+  updateStatus: UpdateStatus
 }
 
 const SECTIONS: { id: SettingsSection; icon: string; label: string }[] = [
@@ -35,6 +37,7 @@ const SECTIONS: { id: SettingsSection; icon: string; label: string }[] = [
   { id: 'search', icon: '🔍', label: 'Buscador' },
   { id: 'privacy', icon: '🛡️', label: 'Privacidad' },
   { id: 'extensions', icon: '🧩', label: 'Extensiones' },
+  { id: 'system', icon: '⚙️', label: 'Sistema' },
   { id: 'about', icon: 'ℹ️', label: 'Acerca de' }
 ]
 
@@ -352,6 +355,8 @@ function SettingsPage(props: SettingsPageProps): React.JSX.Element {
               onChanged={props.onExtensionsChanged}
             />
           )}
+
+          {section === 'system' && <SystemSection updateStatus={props.updateStatus} />}
 
           {section === 'about' && (
             <section className="settings-card about-card">

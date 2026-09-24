@@ -24,6 +24,8 @@ import {
 import { clearHistory, registerHistory, trackHistory } from './history'
 import { migrateFromOldName } from './migrate'
 import { registerStore } from './store'
+import { applyGpuSwitches, registerSystem } from './system'
+import { registerUpdater } from './updater'
 
 // Session shared by every tab; kept apart from the app UI so clearing
 // browsing data never wipes the browser's own settings.
@@ -159,6 +161,7 @@ function createWindow(): void {
 }
 
 migrateFromOldName()
+applyGpuSwitches()
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -175,6 +178,8 @@ app.whenReady().then(async () => {
   })
 
   registerStore()
+  registerSystem()
+  registerUpdater()
   registerHistory()
 
   ipcMain.on('set-theme', (_, theme: BrowserTheme) => {

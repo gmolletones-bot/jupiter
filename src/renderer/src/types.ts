@@ -17,7 +17,7 @@ export interface StoredWallpaper {
 export type InternalPage = 'settings' | 'history' | 'bookmarks'
 
 export type SettingsSection =
-  'personalization' | 'widgets' | 'home' | 'search' | 'privacy' | 'extensions' | 'about'
+  'personalization' | 'widgets' | 'home' | 'search' | 'privacy' | 'extensions' | 'system' | 'about'
 
 export interface Shortcut {
   id: string
