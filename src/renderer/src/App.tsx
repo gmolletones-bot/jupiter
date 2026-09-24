@@ -54,6 +54,7 @@ import MiniPlayer from './components/widgets/MiniPlayer'
 import SettingsPage from './components/SettingsPage'
 import TabBar from './components/TabBar'
 import UpdateBanner from './components/UpdateBanner'
+import Welcome from './components/Welcome'
 import Toolbar from './components/Toolbar'
 import WebTab from './components/WebTab'
 import {
@@ -845,6 +846,16 @@ function App(): React.JSX.Element {
         )}
         <UpdateBanner status={updateStatus} />
       </main>
+      {!settings.onboarded && (
+        <Welcome
+          settings={settings}
+          onChange={updateSettings}
+          onFinish={() => {
+            updateSettings({ onboarded: true })
+            refreshShields()
+          }}
+        />
+      )}
     </div>
   )
 }

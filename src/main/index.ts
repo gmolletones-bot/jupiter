@@ -137,7 +137,7 @@ function createWindow(): void {
     // No native title bar: the tabs take its place, like Chrome or Brave.
     titleBarStyle: 'hidden',
     ...(process.platform !== 'darwin' ? { titleBarOverlay: titleBarOverlay() } : {}),
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,

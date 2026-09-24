@@ -3,6 +3,7 @@
 @import './pages.css';
 @import './widgets.css';
 @import './scene.css';
+@import './welcome.css';
 
 /* The theme setting drives nativeTheme in the main process, which also
    switches prefers-color-scheme here, so one media query covers it.

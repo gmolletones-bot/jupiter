@@ -22,8 +22,10 @@ import {
   Search,
   Settings as SettingsIcon,
   Shield,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react'
+import JupiterLogo from './JupiterLogo'
 
 interface SettingsPageProps {
   settings: Settings
@@ -378,11 +380,14 @@ function SettingsPage(props: SettingsPageProps): React.JSX.Element {
 
           {section === 'about' && (
             <section className="settings-card about-card">
-              <Orbit className="about-logo" />
+              <JupiterLogo className="about-logo" />
               <h2>Jupiter</h2>
               <div className="settings-hint">
                 Chromium {versions.chrome} · Electron {versions.electron} · Node {versions.node}
               </div>
+              <button className="button-ghost" onClick={() => onChange({ onboarded: false })}>
+                <Sparkles /> Ver la bienvenida otra vez
+              </button>
             </section>
           )}
         </div>

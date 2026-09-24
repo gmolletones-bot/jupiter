@@ -1,0 +1,279 @@
+/* ---------- Welcome tour (first run) ---------- */
+
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+  animation: welcome-in 400ms ease-out;
+}
+
+.welcome > .wallpaper {
+  position: absolute;
+  inset: 0;
+}
+
+/* The tab strip is covered, so the window can still be dragged from the top. */
+.welcome-drag {
+  position: absolute;
+  top: 0;
+  right: env(titlebar-area-width, 0);
+  left: 0;
+  height: max(env(titlebar-area-height, 40px), 40px);
+  -webkit-app-region: drag;
+}
+
+.welcome-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  min-height: 460px;
+  max-height: 100%;
+  padding: 36px 40px 28px;
+  overflow-y: auto;
+  border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+  border-radius: calc(var(--radius) * 2.4);
+  background: color-mix(in srgb, var(--card-bg) 82%, transparent);
+  backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.35);
+  color: var(--text);
+}
+
+.welcome-step {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  animation: welcome-step-in 350ms ease-out;
+}
+
+.welcome-step h1,
+.welcome-step h2 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.welcome-step h1 {
+  font-size: 30px;
+}
+
+.welcome-step h2 {
+  font-size: 24px;
+}
+
+.welcome-step p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.welcome-hello {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.welcome-hello p {
+  max-width: 400px;
+}
+
+.welcome-logo {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 8px;
+  animation: welcome-float 6s ease-in-out infinite;
+  filter: drop-shadow(0 18px 40px color-mix(in srgb, #a855f7 45%, transparent));
+}
+
+.welcome-icon {
+  color: var(--accent);
+  font-size: 44px;
+}
+
+.welcome-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.welcome-field > span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.welcome-field .segmented {
+  align-self: flex-start;
+}
+
+.welcome-field .swatches {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.welcome-field .swatch {
+  width: 36px;
+  height: 36px;
+}
+
+.welcome-wallpapers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.welcome-input {
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--input-border);
+  border-radius: calc(var(--radius) * 1.1);
+  outline: none;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 17px;
+}
+
+.welcome-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.welcome-greeting {
+  margin-top: 8px;
+  color: var(--accent);
+  font-family: 'Caveat', cursive;
+  font-size: 40px;
+  text-align: center;
+  animation: welcome-step-in 300ms ease-out;
+}
+
+.welcome-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.welcome-toggles label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--input-border);
+  border-radius: calc(var(--radius) * 1.1);
+  background: color-mix(in srgb, var(--input-bg) 60%, transparent);
+}
+
+.welcome-toggles label span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.welcome-toggles strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.welcome-tips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.welcome-tip {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--input-border);
+  border-radius: calc(var(--radius) * 1.1);
+  background: color-mix(in srgb, var(--input-bg) 60%, transparent);
+}
+
+.welcome-tip > .lucide {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 22px;
+}
+
+.welcome-tip div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.welcome-tip strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.welcome-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.welcome-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.welcome-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--text) 20%, transparent);
+  transition:
+    width 250ms,
+    background-color 250ms;
+}
+
+.welcome-dots span.active {
+  width: 24px;
+  background: var(--accent);
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.welcome-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@keyframes welcome-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes welcome-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes welcome-float {
+  50% {
+    transform: translateY(-10px) rotate(-3deg);
+  }
+}

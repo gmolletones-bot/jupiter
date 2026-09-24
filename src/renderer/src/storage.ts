@@ -55,7 +55,8 @@ export const DEFAULT_SETTINGS: Settings = {
     { id: 'wikipedia', title: 'Wikipedia', url: 'https://es.wikipedia.org' },
     { id: 'gmail', title: 'Gmail', url: 'https://mail.google.com' }
   ],
-  showBookmarksBar: true
+  showBookmarksBar: true,
+  onboarded: false
 }
 
 export interface SavedSession {

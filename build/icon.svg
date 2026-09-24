@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Jupiter's app icon. Source of every size: run `npm run icons` after editing. -->
+  <defs>
+    <radialGradient id="space" cx="35%" cy="25%" r="90%">
+      <stop offset="0" stop-color="#3b2a86" />
+      <stop offset="0.55" stop-color="#1b1446" />
+      <stop offset="1" stop-color="#0b0820" />
+    </radialGradient>
+    <linearGradient id="bands" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4dcb8" />
+      <stop offset="0.12" stop-color="#e2b183" />
+      <stop offset="0.2" stop-color="#f6e3c6" />
+      <stop offset="0.3" stop-color="#c77b45" />
+      <stop offset="0.38" stop-color="#eecb9f" />
+      <stop offset="0.48" stop-color="#f8e7cf" />
+      <stop offset="0.56" stop-color="#b8683a" />
+      <stop offset="0.64" stop-color="#e7bd8e" />
+      <stop offset="0.74" stop-color="#f3d8b3" />
+      <stop offset="0.82" stop-color="#c98a55" />
+      <stop offset="0.9" stop-color="#e9c69c" />
+      <stop offset="1" stop-color="#d9a877" />
+    </linearGradient>
+    <radialGradient id="shade" cx="32%" cy="28%" r="80%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45" />
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0" />
+      <stop offset="0.8" stop-color="#1a0f2e" stop-opacity="0.35" />
+      <stop offset="1" stop-color="#1a0f2e" stop-opacity="0.7" />
+    </radialGradient>
+    <radialGradient id="spot" cx="45%" cy="45%" r="60%">
+      <stop offset="0" stop-color="#f0a07a" />
+      <stop offset="0.6" stop-color="#c8502f" />
+      <stop offset="1" stop-color="#a8432a" />
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6366f1" />
+      <stop offset="0.5" stop-color="#c084fc" />
+      <stop offset="1" stop-color="#a855f7" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0.55" stop-color="#a855f7" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#a855f7" stop-opacity="0" />
+    </radialGradient>
+    <clipPath id="planet">
+      <circle cx="512" cy="512" r="280" />
+    </clipPath>
+    <!-- The ring passes behind the planet on top and in front of it below. -->
+    <clipPath id="ring-back">
+      <rect x="0" y="0" width="1024" height="512" />
+    </clipPath>
+    <clipPath id="ring-front">
+      <rect x="0" y="512" width="1024" height="512" />
+    </clipPath>
+  </defs>
+
+  <rect x="48" y="48" width="928" height="928" rx="212" fill="url(#space)" />
+
+  <g fill="#ffffff">
+    <circle cx="210" cy="220" r="6" opacity="0.9" />
+    <circle cx="820" cy="190" r="5" opacity="0.8" />
+    <circle cx="170" cy="760" r="4" opacity="0.7" />
+    <circle cx="850" cy="800" r="6" opacity="0.85" />
+    <circle cx="300" cy="140" r="3" opacity="0.6" />
+    <circle cx="760" cy="880" r="3" opacity="0.6" />
+    <circle cx="880" cy="420" r="3.5" opacity="0.7" />
+  </g>
+
+  <circle cx="512" cy="512" r="360" fill="url(#glow)" />
+
+  <g transform="rotate(-18 512 512)">
+    <ellipse cx="512" cy="512" rx="420" ry="110" fill="none" stroke="url(#ring)"
+      stroke-width="34" opacity="0.55" clip-path="url(#ring-back)" />
+  </g>
+
+  <g clip-path="url(#planet)">
+    <rect x="232" y="232" width="560" height="560" fill="url(#bands)" />
+    <path d="M232 400 C340 385 420 418 520 402 C620 386 700 412 792 398 L792 418 C700 432 620 406 520 422 C420 438 340 405 232 420 Z"
+      fill="#a95c31" opacity="0.55" />
+    <path d="M232 612 C330 600 430 628 530 612 C630 596 710 622 792 610 L792 626 C710 640 630 612 530 628 C430 644 330 616 232 628 Z"
+      fill="#9a522c" opacity="0.5" />
+    <ellipse cx="610" cy="570" rx="62" ry="36" fill="url(#spot)" />
+    <ellipse cx="610" cy="570" rx="62" ry="36" fill="none" stroke="#f6d2b5" stroke-width="6" opacity="0.6" />
+    <circle cx="512" cy="512" r="280" fill="url(#shade)" />
+  </g>
+
+  <g transform="rotate(-18 512 512)">
+    <ellipse cx="512" cy="512" rx="420" ry="110" fill="none" stroke="url(#ring)"
+      stroke-width="34" clip-path="url(#ring-front)" />
+  </g>
+</svg>

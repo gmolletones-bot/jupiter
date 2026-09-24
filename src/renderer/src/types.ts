@@ -83,6 +83,8 @@ export interface Settings {
   showShortcuts: boolean
   shortcuts: Shortcut[]
   showBookmarksBar: boolean
+  /** The welcome tour was finished or skipped. */
+  onboarded: boolean
 }
 
 export interface Tab {
