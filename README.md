@@ -1,16 +1,31 @@
-# 🪐 Jupiter
+<p align="center">
+  <img src="build/icon.svg" width="112" alt="" />
+</p>
 
-Navegador web de escritorio hecho con **Electron**, **React** y **TypeScript**.
+<h1 align="center">Jupiter</h1>
+
+<p align="center">Navegador web de escritorio hecho con <strong>Electron</strong>, <strong>React</strong> y <strong>TypeScript</strong>.</p>
+
+## Descargar
+
+Los instaladores están en [Releases](https://github.com/gmolletones-bot/jupiter/releases/latest). Una vez instalado, Jupiter se actualiza solo.
+
+- **Windows**: `jupiter-<versión>-setup.exe`. El instalador no está firmado, así que Windows puede mostrar «Windows protegió su PC»: pulsa **Más información → Ejecutar de todas formas**.
+- **Linux (Debian, Ubuntu, Mint…)**: `sudo apt install ./jupiter_<versión>_amd64.deb`
+- **Linux (cualquier distribución)**: `chmod +x jupiter-<versión>.AppImage` y ábrelo.
 
 ## Funciones
 
 - **Pestañas** con título, favicon y barra de título integrada (como Chrome o Brave).
 - **Barra de direcciones inteligente**: autocompletado, sugerencias del historial, marcadores y buscador.
-- **Escudos**: bloqueador de anuncios y rastreadores con EasyList, EasyPrivacy y las listas de uBlock Origin (motor de Ghostery), incluidos los anuncios de YouTube y los avisos de cookies. Se puede desactivar por sitio.
+- **Paleta de comandos** (Ctrl+K): pestañas, acciones, marcadores e historial en un solo buscador.
+- **Escudos**: bloqueador de anuncios y rastreadores con EasyList, EasyPrivacy y las listas de uBlock Origin (motor de Ghostery), incluidos los anuncios de YouTube y los avisos de cookies. Se puede desactivar por sitio y muestra estadísticas semanales.
 - **Página de inicio personalizable**: reloj, clima, temporizador Focus (Pomodoro), sonidos ambientales, playlists de YouTube y Spotify, accesos directos y fondos animados de día y de noche.
-- **Personalización**: tema claro u oscuro, color de acento, fondos propios y redondez de las esquinas.
+- **Modo Focus**: mientras corre el Pomodoro, bloquea las webs que distraen.
+- **Personalización**: tema claro u oscuro, color de acento, colores de cada web en la barra, efecto Mica (Windows 11), fondos propios y redondez de las esquinas.
 - **Historial, marcadores** con barra de marcadores, **búsqueda en la página**, zoom y menú contextual.
 - **Extensiones de Chrome** descomprimidas (compatibilidad parcial).
+- **Actualizaciones automáticas** desde GitHub Releases y aceleración de vídeo por GPU (VA-API en Linux).
 
 ## Desarrollo
 
