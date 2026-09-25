@@ -1,5 +1,5 @@
 import type { Bookmark, Settings, StoredWallpaper } from './types'
-import { NEW_TAB_URL } from './url'
+import { NEW_TAB_URL, upgradeInternalUrl } from './url'
 
 // Values live in files written by the main process (see src/main/store.ts).
 // Older versions used localStorage under these keys; they are read once as a
@@ -87,6 +87,7 @@ export function loadSettings(): Settings {
   const settings = { ...DEFAULT_SETTINGS, ...read<Partial<Settings>>('settings') }
   // Older versions had a single uploaded wallpaper called "custom".
   if (settings.wallpaper === 'custom') settings.wallpaper = 'img:custom'
+  settings.homePage = upgradeInternalUrl(settings.homePage)
   return settings
 }
 

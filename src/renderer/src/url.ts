@@ -1,11 +1,18 @@
 import type { InternalPage, SearchEngine } from './types'
 
-export const NEW_TAB_URL = 'navegador://inicio'
+export const NEW_TAB_URL = 'jupiter://inicio'
 
 export const INTERNAL_PAGES: Record<InternalPage, { url: string; title: string }> = {
-  settings: { url: 'navegador://configuracion', title: 'Configuración' },
-  history: { url: 'navegador://historial', title: 'Historial' },
-  bookmarks: { url: 'navegador://marcadores', title: 'Marcadores' }
+  settings: { url: 'jupiter://configuracion', title: 'Configuración' },
+  history: { url: 'jupiter://historial', title: 'Historial' },
+  bookmarks: { url: 'jupiter://marcadores', title: 'Marcadores' }
+}
+
+const OLD_SCHEME = 'navegador://'
+
+/** Internal pages were navegador:// before the rename; saved sessions and settings may still say so. */
+export function upgradeInternalUrl(url: string): string {
+  return url.startsWith(OLD_SCHEME) ? `jupiter://${url.slice(OLD_SCHEME.length)}` : url
 }
 
 export function internalPageOf(url: string): InternalPage | undefined {
@@ -24,7 +31,7 @@ export const SEARCH_ENGINES: Record<SearchEngine, { label: string; searchUrl: st
 // domains and falls back to a web search for anything else.
 export function toUrl(input: string, engine: SearchEngine): string {
   const text = input.trim()
-  if (/^[a-z][a-z\d+\-.]*:\/\//i.test(text)) return text
+  if (/^[a-z][a-z\d+\-.]*:\/\//i.test(text)) return upgradeInternalUrl(text)
   if (/^localhost(:\d+)?(\/|$)/i.test(text)) return `http://${text}`
   if (!/\s/.test(text) && /\.[a-z]{2,}(:\d+)?(\/|$)/i.test(text)) return `https://${text}`
   return SEARCH_ENGINES[engine].searchUrl + encodeURIComponent(text)

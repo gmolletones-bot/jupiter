@@ -1,6 +1,6 @@
 import { loadSession } from './storage'
 import type { InternalPage, Settings, Tab } from './types'
-import { INTERNAL_PAGES, internalPageOf, NEW_TAB_URL } from './url'
+import { INTERNAL_PAGES, internalPageOf, NEW_TAB_URL, upgradeInternalUrl } from './url'
 
 let nextId = 1
 
@@ -47,8 +47,9 @@ export function createNewTabPage(): Tab {
   }
 }
 
-/** Builds the right kind of tab for a URL, including the internal navegador:// pages. */
-export function createTab(url: string): Tab {
+/** Builds the right kind of tab for a URL, including the internal jupiter:// pages. */
+export function createTab(savedUrl: string): Tab {
+  const url = upgradeInternalUrl(savedUrl)
   if (url === NEW_TAB_URL) return createNewTabPage()
   const page = internalPageOf(url)
   return page ? createInternalTab(page) : createWebTab(url)
