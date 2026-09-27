@@ -12,6 +12,7 @@ import {
   CloudRain,
   Flame,
   Music,
+  Orbit,
   Play,
   Radio,
   Tv,
@@ -26,7 +27,8 @@ const SOUND_ICONS: Record<SoundId, LucideIcon> = {
   waves: Waves,
   wind: Wind,
   white: Radio,
-  brown: AudioWaveform
+  brown: AudioWaveform,
+  space: Orbit
 }
 
 interface SoundsPanelProps {

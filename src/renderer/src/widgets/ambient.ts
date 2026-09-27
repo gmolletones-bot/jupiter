@@ -8,7 +8,8 @@ export const SOUNDS = [
   { id: 'waves', name: 'Olas' },
   { id: 'wind', name: 'Viento' },
   { id: 'white', name: 'Ruido blanco' },
-  { id: 'brown', name: 'Ruido marrón' }
+  { id: 'brown', name: 'Ruido marrón' },
+  { id: 'space', name: 'Cosmos' }
 ] as const
 
 export type SoundId = (typeof SOUNDS)[number]['id']
@@ -150,6 +151,84 @@ function build(id: SoundId, output: GainNode): () => void {
         clearInterval(timer)
         nodes.forEach((node) => node.stop())
         crackles.disconnect()
+      }
+    }
+    case 'space': {
+      // Deep space drone: two detuned oscillators through a slowly
+      // modulating lowpass filter, creating a vast, breathing atmosphere.
+      const droneFilter = filter('lowpass', 400, 1.2)
+      droneFilter.connect(output)
+
+      // Primary drone - low triangle wave
+      const osc1 = ctx.createOscillator()
+      osc1.type = 'triangle'
+      osc1.frequency.value = 55 // A1 - deep and grounding
+      const gain1 = ctx.createGain()
+      gain1.gain.value = 0.35
+      osc1.connect(gain1).connect(droneFilter)
+      osc1.start()
+      nodes.push(osc1)
+
+      // Secondary drone - slightly detuned sawtooth for richness
+      const osc2 = ctx.createOscillator()
+      osc2.type = 'sawtooth'
+      osc2.frequency.value = 55.3 // Slight detune for chorus effect
+      const gain2 = ctx.createGain()
+      gain2.gain.value = 0.15
+      osc2.connect(gain2).connect(droneFilter)
+      osc2.start()
+      nodes.push(osc2)
+
+      // Sub-bass layer - sine wave one octave below
+      const sub = ctx.createOscillator()
+      sub.type = 'sine'
+      sub.frequency.value = 27.5 // A0 - sub-bass
+      const subGain = ctx.createGain()
+      subGain.gain.value = 0.25
+      sub.connect(subGain).connect(output)
+      sub.start()
+      nodes.push(sub)
+
+      // Slow filter modulation - "breathing" effect
+      const filterLfo = lfo(0.08, 250, droneFilter.frequency)
+
+      // Very slow pitch drift for movement
+      const pitchLfo = ctx.createOscillator()
+      const pitchAmount = ctx.createGain()
+      pitchLfo.frequency.value = 0.05 // Very slow drift
+      pitchAmount.gain.value = 2 // ±2Hz drift
+      pitchLfo.connect(pitchAmount)
+      pitchAmount.connect(osc1.frequency)
+      pitchAmount.connect(osc2.frequency)
+      pitchLfo.start()
+      nodes.push(pitchLfo)
+
+      // Gentle amplitude modulation for shimmer
+      const ampLfo = ctx.createOscillator()
+      const ampAmount = ctx.createGain()
+      ampLfo.frequency.value = 0.12
+      ampAmount.gain.value = 0.08
+      const baseGain = ctx.createGain()
+      baseGain.gain.value = 1
+      droneFilter.disconnect()
+      droneFilter.connect(baseGain)
+      ampLfo.connect(ampAmount)
+      ampAmount.connect(baseGain.gain)
+      baseGain.connect(output)
+      ampLfo.start()
+      nodes.push(ampLfo)
+
+      // Store additional nodes for cleanup
+      const extraNodes = [filterLfo, osc1, osc2, sub, pitchLfo, ampLfo]
+      return () => {
+        extraNodes.forEach((node) => {
+          try { node.stop() } catch { /* already stopped */ }
+        })
+        droneFilter.disconnect()
+        baseGain.disconnect()
+        gain1.disconnect()
+        gain2.disconnect()
+        subGain.disconnect()
       }
     }
   }
