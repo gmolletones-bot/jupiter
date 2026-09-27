@@ -1,7 +1,7 @@
 {
   "name": "jupiter",
   "productName": "Jupiter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Jupiter, un navegador web hecho con Electron y React",
   "main": "./out/main/index.js",
   "author": "example.com",
