@@ -40,7 +40,11 @@ function Wallpaper({
   }
   // An image that was deleted falls back to the default preset.
   const preset = wallpaper.startsWith('img:') ? 'aurora' : wallpaper
-  return <div className={`wallpaper wallpaper-${preset} ${className}`} />
+  return (
+    <div className={`wallpaper wallpaper-${preset} ${className}`}>
+      {preset === 'jupiter' && <div className="jupiter-planet" />}
+    </div>
+  )
 }
 
 export default Wallpaper

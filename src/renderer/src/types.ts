@@ -3,7 +3,7 @@ export type SearchEngine = 'google' | 'duckduckgo' | 'bing'
 export type StartupMode = 'home' | 'restore'
 
 export type WallpaperPreset =
-  'ambient' | 'aurora' | 'neon' | 'sunset' | 'ocean' | 'forest' | 'midnight' | 'accent' | 'plain'
+  'ambient' | 'aurora' | 'neon' | 'sunset' | 'ocean' | 'forest' | 'midnight' | 'jupiter' | 'accent' | 'plain'
 
 /** A preset id, or `img:<id>` for an image in the uploaded gallery. */
 export type WallpaperRef = string

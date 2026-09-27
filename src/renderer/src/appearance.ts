@@ -21,6 +21,7 @@ export const WALLPAPERS: { id: WallpaperPreset; name: string }[] = [
   { id: 'ocean', name: 'Océano' },
   { id: 'forest', name: 'Bosque' },
   { id: 'midnight', name: 'Medianoche' },
+  { id: 'jupiter', name: 'Júpiter' },
   { id: 'accent', name: 'Tu color' },
   { id: 'plain', name: 'Liso' }
 ]
