@@ -433,7 +433,8 @@ function App(): React.JSX.Element {
       ['waves', 'Olas', Waves],
       ['wind', 'Viento', Wind],
       ['white', 'Ruido blanco', Radio],
-      ['brown', 'Ruido marrón', AudioWaveform]
+      ['brown', 'Ruido marrón', AudioWaveform],
+      ['space', 'Cosmos', Orbit]
     ]
 
     return [
