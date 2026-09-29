@@ -3,7 +3,16 @@ export type SearchEngine = 'google' | 'duckduckgo' | 'bing'
 export type StartupMode = 'home' | 'restore'
 
 export type WallpaperPreset =
-  'ambient' | 'aurora' | 'neon' | 'sunset' | 'ocean' | 'forest' | 'midnight' | 'jupiter' | 'accent' | 'plain'
+  | 'ambient'
+  | 'aurora'
+  | 'neon'
+  | 'sunset'
+  | 'ocean'
+  | 'forest'
+  | 'midnight'
+  | 'jupiter'
+  | 'accent'
+  | 'plain'
 
 /** A preset id, or `img:<id>` for an image in the uploaded gallery. */
 export type WallpaperRef = string
@@ -14,7 +23,7 @@ export interface StoredWallpaper {
 }
 
 /** Internal pages that exist at most once (opening them again focuses the tab). */
-export type InternalPage = 'settings' | 'history' | 'bookmarks'
+export type InternalPage = 'settings' | 'history' | 'bookmarks' | 'games'
 
 export type SettingsSection =
   'personalization' | 'widgets' | 'home' | 'search' | 'privacy' | 'extensions' | 'system' | 'about'

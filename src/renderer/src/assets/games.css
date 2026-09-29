@@ -1,0 +1,224 @@
+/* ---------- Games: jupiter://juegos and the offline page ---------- */
+
+.games-page {
+  overflow-y: auto;
+  background: var(--page-bg);
+}
+
+.games-page-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+  animation: rise 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.games-page-inner h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.games-page-inner h1 .lucide {
+  color: var(--accent);
+}
+
+.games-page-intro {
+  margin: 0 0 24px;
+  color: var(--text-muted);
+}
+
+.arcade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.arcade-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--toolbar-border);
+  border-radius: calc(var(--radius) * 1.4);
+  background: var(--card-bg);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 200ms,
+    box-shadow 200ms,
+    border-color 200ms;
+}
+
+.arcade-card:hover:not(:disabled) {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.arcade-card:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.arcade-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 8;
+  color: #ffffff;
+  font-size: 44px;
+}
+
+.arcade-art .lucide {
+  filter: drop-shadow(0 4px 14px rgb(0 0 0 / 0.5));
+}
+
+.arcade-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.55);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.arcade-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.arcade-card-text strong {
+  color: var(--text);
+  font-size: 16px;
+}
+
+.arcade-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.arcade-stage-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.arcade-stage-bar .button-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.arcade-stage-bar strong {
+  font-size: 17px;
+}
+
+.arcade-controls {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.arcade-screen {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  max-height: calc(100vh - 340px);
+  border-radius: calc(var(--radius) * 1.4);
+  background: #000000;
+  box-shadow: 0 20px 50px rgb(0 0 0 / 0.3);
+}
+
+.game-canvas,
+.game-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+.game-message {
+  display: grid;
+  place-content: center;
+  gap: 12px;
+  height: 100%;
+  padding: 24px;
+  color: #e5e7eb;
+  text-align: center;
+}
+
+.game-message .lucide {
+  justify-self: center;
+  font-size: 40px;
+  opacity: 0.8;
+}
+
+.game-progress {
+  width: 260px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.15);
+}
+
+.game-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 200ms;
+}
+
+/* Offline page: the error becomes a small arcade. */
+.load-error:has(> .offline) {
+  place-items: start center;
+  overflow-y: auto;
+}
+
+.offline {
+  width: min(1100px, 100%);
+  padding: 28px 32px 48px;
+  animation: rise 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.offline-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.offline-head h1 {
+  margin: 0 0 4px;
+  font-size: 26px;
+}
+
+.offline-head p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.offline-icon.lucide {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 44px;
+}
+
+.offline-head .button-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}

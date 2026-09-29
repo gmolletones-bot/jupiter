@@ -222,49 +222,47 @@
   border-radius: 50%;
   /* Jupiter's horizontal bands */
   background:
-    /* Top polar region - dark brown/grey */
-    linear-gradient(
-      180deg,
-      #3d2b1f 0%,
-      #5c4033 4%,
-      #8b6914 7%,
-      #a0845c 10%,
-      #c4a265 13%,
-      #d4b87a 16%,
-      #c9a86a 19%,
-      #b8955a 22%,
-      #a67c52 25%,
-      #8b6914 28%,
-      #c4a265 31%,
-      #d4b87a 34%,
-      #e8d5a3 37%,
-      #f0e6c8 40%,
-      #e8d5a3 43%,
-      #d4b87a 46%,
-      #c9a86a 49%,
-      #b8955a 52%,
-      #c4a265 55%,
-      #d4b87a 58%,
-      #e8d5a3 61%,
-      #f0e6c8 64%,
-      #e8d5a3 67%,
-      #d4b87a 70%,
-      #c9a86a 73%,
-      #b8955a 76%,
-      #a67c52 79%,
-      #8b6914 82%,
-      #6b4e1a 85%,
-      #4a3517 88%,
-      #3d2b1f 92%,
-      #2d1f14 96%,
-      #1a120a 100%
-    );
+    /* Top polar region - dark brown/grey */ linear-gradient(
+    180deg,
+    #3d2b1f 0%,
+    #5c4033 4%,
+    #8b6914 7%,
+    #a0845c 10%,
+    #c4a265 13%,
+    #d4b87a 16%,
+    #c9a86a 19%,
+    #b8955a 22%,
+    #a67c52 25%,
+    #8b6914 28%,
+    #c4a265 31%,
+    #d4b87a 34%,
+    #e8d5a3 37%,
+    #f0e6c8 40%,
+    #e8d5a3 43%,
+    #d4b87a 46%,
+    #c9a86a 49%,
+    #b8955a 52%,
+    #c4a265 55%,
+    #d4b87a 58%,
+    #e8d5a3 61%,
+    #f0e6c8 64%,
+    #e8d5a3 67%,
+    #d4b87a 70%,
+    #c9a86a 73%,
+    #b8955a 76%,
+    #a67c52 79%,
+    #8b6914 82%,
+    #6b4e1a 85%,
+    #4a3517 88%,
+    #3d2b1f 92%,
+    #2d1f14 96%,
+    #1a120a 100%
+  );
   box-shadow:
     /* Inner shadow for depth */
     inset -20px -10px 60px rgba(0, 0, 0, 0.6),
     inset 10px 5px 40px rgba(255, 200, 150, 0.1),
-    /* Outer glow */
-    0 0 80px rgba(200, 150, 100, 0.15),
+    /* Outer glow */ 0 0 80px rgba(200, 150, 100, 0.15),
     0 0 160px rgba(150, 100, 60, 0.1);
   animation: jupiter-rotate 120s linear infinite;
 }
@@ -298,18 +296,17 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 8px,
-      rgba(255, 255, 255, 0.02) 8px,
-      rgba(255, 255, 255, 0.02) 9px,
-      transparent 9px,
-      transparent 15px,
-      rgba(0, 0, 0, 0.03) 15px,
-      rgba(0, 0, 0, 0.03) 16px
-    );
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 8px,
+    rgba(255, 255, 255, 0.02) 8px,
+    rgba(255, 255, 255, 0.02) 9px,
+    transparent 9px,
+    transparent 15px,
+    rgba(0, 0, 0, 0.03) 15px,
+    rgba(0, 0, 0, 0.03) 16px
+  );
 }
 
 @keyframes jupiter-rotate {

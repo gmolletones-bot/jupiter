@@ -5,6 +5,7 @@ import {
   Check,
   Command,
   EllipsisVertical,
+  Gamepad2,
   History,
   LogOut,
   Maximize,
@@ -56,6 +57,7 @@ const ENTRIES: MenuEntry[] = [
     checkable: true
   },
   { action: 'extensions', icon: Puzzle, label: 'Extensiones' },
+  { action: 'games', icon: Gamepad2, label: 'Juegos' },
   {
     action: 'clear-data',
     icon: Trash2,

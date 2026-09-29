@@ -6,6 +6,7 @@ import {
   CloudRain,
   Cpu,
   Flame,
+  Gamepad2,
   History,
   House,
   Info,
@@ -48,6 +49,7 @@ import BookmarksBar from './components/BookmarksBar'
 import BookmarksPage from './components/BookmarksPage'
 import CommandPalette, { type PaletteCommand } from './components/CommandPalette'
 import FindBar from './components/FindBar'
+import GamesPage from './components/GamesPage'
 import HistoryPage from './components/HistoryPage'
 import NewTabPage from './components/NewTabPage'
 import MiniPlayer from './components/widgets/MiniPlayer'
@@ -350,6 +352,7 @@ function App(): React.JSX.Element {
         break
       case 'history':
       case 'bookmarks':
+      case 'games':
         openInternalPage(action)
         break
       case 'bookmark-page':
@@ -441,6 +444,7 @@ function App(): React.JSX.Element {
       command('new-tab', 'Nueva pestaña', Plus, () => runAction('new-tab'), 'abrir', 'Ctrl+T'),
       command('history', 'Historial', History, () => runAction('history'), 'visitadas', 'Ctrl+H'),
       command('bookmarks', 'Marcadores', Star, () => runAction('bookmarks'), 'favoritos'),
+      command('games', 'Juegos', Gamepad2, () => runAction('games'), 'jugar doom nes arcade'),
       command(
         'theme-toggle',
         settings.theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro',
@@ -757,6 +761,8 @@ function App(): React.JSX.Element {
         )
       case 'history':
         return <HistoryPage key={tab.id} active={active} onOpen={openLink} />
+      case 'games':
+        return <GamesPage key={tab.id} active={active} />
       case 'bookmarks':
         return (
           <BookmarksPage

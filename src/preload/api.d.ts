@@ -27,6 +27,7 @@ declare global {
     | 'clear-data'
     | 'quit'
     | 'command-palette'
+    | 'games'
 
   type UpdateStatus =
     | { state: 'dev' | 'idle' | 'checking' | 'up-to-date'; version?: string }

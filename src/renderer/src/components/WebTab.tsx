@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useEffectEvent, useRef } from 'react'
 import type {
   DidChangeThemeColorEvent,
   DidFailLoadEvent,
@@ -11,7 +11,20 @@ import type {
 import type { Tab } from '../types'
 import { toHexColor } from '../appearance'
 import { exactHostOf, FOCUS_BLOCKED } from '../url'
-import { Orbit, Timer } from 'lucide-react'
+import { Orbit, RotateCw, Timer, WifiOff } from 'lucide-react'
+import Arcade from './games/Arcade'
+
+const OFFLINE_ERRORS = [
+  'INTERNET_DISCONNECTED',
+  'NETWORK_CHANGED',
+  'ADDRESS_UNREACHABLE',
+  'NETWORK_ACCESS_DENIED'
+]
+
+/** Failures caused by having no connection, where Jupiter offers its games instead. */
+function isOfflineError(code: string): boolean {
+  return !navigator.onLine || OFFLINE_ERRORS.some((error) => code.includes(error))
+}
 
 function errorMessage(code: string, url: string): string {
   let host = url
@@ -133,6 +146,24 @@ function WebTab({
     }
   }, [id, onUpdate, registerWebview])
 
+  const retry = (): void => {
+    if (!tab.loadError) return
+    const { url } = tab.loadError
+    failedUrl.current = null
+    onUpdate(id, { loadError: undefined })
+    webviewRef.current?.loadURL(url).catch(() => {})
+  }
+
+  // Back online: load the page that failed.
+  const onOnline = useEffectEvent(() => {
+    if (tab.loadError && tab.loadError.code !== FOCUS_BLOCKED) retry()
+  })
+  useEffect(() => {
+    const listener = (): void => onOnline()
+    window.addEventListener('online', listener)
+    return () => window.removeEventListener('online', listener)
+  }, [])
+
   const { loadError } = tab
   const blockedByFocus = loadError?.code === FOCUS_BLOCKED
 
@@ -165,20 +196,30 @@ function WebTab({
                 . Vuelve a lo tuyo: cuando termine el Focus podrás entrar.
               </p>
             </div>
+          ) : isOfflineError(loadError.code) ? (
+            <div className="offline">
+              <header className="offline-head">
+                <WifiOff className="offline-icon" />
+                <div>
+                  <h1>Sin conexión</h1>
+                  <p>
+                    Mientras vuelve internet, juega un rato. {exactHostOf(loadError.url)} se cargará
+                    solo cuando haya conexión.
+                  </p>
+                </div>
+                <button className="button-ghost" onClick={retry}>
+                  <RotateCw /> Reintentar
+                </button>
+              </header>
+              <Arcade active={active} />
+            </div>
           ) : (
             <div className="load-error-box">
               <Orbit className="load-error-icon" />
               <h1>No se puede acceder a este sitio</h1>
               <p>{errorMessage(loadError.code, loadError.url)}</p>
               <code>{loadError.code}</code>
-              <button
-                className="button-primary"
-                onClick={() => {
-                  failedUrl.current = null
-                  onUpdate(id, { loadError: undefined })
-                  webviewRef.current?.loadURL(loadError.url).catch(() => {})
-                }}
-              >
+              <button className="button-primary" onClick={retry}>
                 Volver a intentar
               </button>
             </div>

@@ -5,7 +5,8 @@ export const NEW_TAB_URL = 'jupiter://inicio'
 export const INTERNAL_PAGES: Record<InternalPage, { url: string; title: string }> = {
   settings: { url: 'jupiter://configuracion', title: 'Configuración' },
   history: { url: 'jupiter://historial', title: 'Historial' },
-  bookmarks: { url: 'jupiter://marcadores', title: 'Marcadores' }
+  bookmarks: { url: 'jupiter://marcadores', title: 'Marcadores' },
+  games: { url: 'jupiter://juegos', title: 'Juegos' }
 }
 
 const OLD_SCHEME = 'navegador://'

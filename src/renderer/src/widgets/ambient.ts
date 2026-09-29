@@ -222,7 +222,11 @@ function build(id: SoundId, output: GainNode): () => void {
       const extraNodes = [filterLfo, osc1, osc2, sub, pitchLfo, ampLfo]
       return () => {
         extraNodes.forEach((node) => {
-          try { node.stop() } catch { /* already stopped */ }
+          try {
+            node.stop()
+          } catch {
+            /* already stopped */
+          }
         })
         droneFilter.disconnect()
         baseGain.disconnect()

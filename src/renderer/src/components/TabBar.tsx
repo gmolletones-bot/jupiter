@@ -1,5 +1,5 @@
 import type { Tab } from '../types'
-import { Globe, History, Orbit, Plus, Settings, Star, X } from 'lucide-react'
+import { Gamepad2, Globe, History, Orbit, Plus, Settings, Star, X } from 'lucide-react'
 
 interface TabBarProps {
   tabs: Tab[]
@@ -15,6 +15,7 @@ function TabIcon({ tab }: { tab: Tab }): React.JSX.Element {
   if (tab.kind === 'newtab') return <Orbit className="tab-icon" />
   if (tab.kind === 'history') return <History className="tab-icon" />
   if (tab.kind === 'bookmarks') return <Star className="tab-icon" />
+  if (tab.kind === 'games') return <Gamepad2 className="tab-icon" />
   if (tab.favicon) {
     return (
       <img
