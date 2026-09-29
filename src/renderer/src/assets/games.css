@@ -135,7 +135,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 16 / 10;
-  max-height: calc(100vh - 340px);
+  max-height: calc(100vh - 400px);
   border-radius: calc(var(--radius) * 1.4);
   background: #000000;
   box-shadow: 0 20px 50px rgb(0 0 0 / 0.3);
@@ -221,4 +221,27 @@
   align-items: center;
   gap: 6px;
   margin-left: auto;
+}
+
+.arcade-credit {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+.game-message .button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: 8px;
+}
+
+.game-message > span {
+  max-width: 440px;
+  color: #9ca3af;
+}
+
+.game-message .game-error {
+  color: #fca5a5;
+  font-size: 12px;
 }

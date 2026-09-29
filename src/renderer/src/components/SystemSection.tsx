@@ -51,7 +51,7 @@ function SystemSection({ updateStatus }: SystemSectionProps): React.JSX.Element 
   if (!info) return <section className="settings-card">Cargando…</section>
 
   const change = async (
-    patch: Partial<Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate'>>
+    patch: Partial<Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate' | 'downloadGames'>>
   ): Promise<void> => {
     await window.api.setSystem(patch)
     setInfo({ ...info, ...patch })
@@ -101,6 +101,20 @@ function SystemSection({ updateStatus }: SystemSectionProps): React.JSX.Element 
             label="Actualizar automáticamente"
             checked={info.autoUpdate}
             onChange={(autoUpdate) => change({ autoUpdate })}
+          />
+        </div>
+        <div className="settings-row">
+          <div>
+            <div className="settings-label">Descargar Doom para jugar sin conexión</div>
+            <div className="settings-hint">
+              Unos 26 MB (Chocolate Doom y Freedoom, ambos libres), una sola vez y en segundo plano.
+              Si lo desactivas, se descarga al abrirlo desde Juegos.
+            </div>
+          </div>
+          <Switch
+            label="Descargar Doom para jugar sin conexión"
+            checked={info.downloadGames}
+            onChange={(downloadGames) => change({ downloadGames })}
           />
         </div>
       </section>

@@ -51,6 +51,15 @@ const api: BrowserApi = {
       ipcRenderer.removeListener('updater:status', listener)
     }
   },
+  getDoomStatus: () => ipcRenderer.invoke('games:doom-status'),
+  downloadDoom: () => ipcRenderer.invoke('games:doom-download'),
+  onDoomStatus: (callback) => {
+    const listener = (_event: IpcRendererEvent, status: DoomStatus): void => callback(status)
+    ipcRenderer.on('games:doom-status', listener)
+    return () => {
+      ipcRenderer.removeListener('games:doom-status', listener)
+    }
+  },
   faviconColor: (url) => ipcRenderer.invoke('favicon:color', url),
   getShields: () => ipcRenderer.invoke('shields:get'),
   setShieldsEnabled: (enabled) => ipcRenderer.invoke('shields:set-enabled', enabled),

@@ -1,0 +1,31 @@
+NES homebrew games bundled with Jupiter
+=======================================
+
+These are new games written for the NES by independent developers. None of
+them is a Nintendo game, and none is licensed or endorsed by Nintendo.
+
+Lawn Mower (lawn-mower.nes)
+  By Shiru, 2011. "It is free of charge, released into Public Domain."
+  (from the game's manual)
+
+LAN Master (lan-master.nes)
+  By Shiru, 2011. "It is free of charge, released into Public Domain."
+  (from the game's manual)
+
+Chase (chase.nes)
+  By Shiru, 2012. "Feel free to do anything you want with this code,
+  consider it Public Domain." (from the game's source, game.c)
+
+Zooming Secretary (zooming-secretary.nes)
+  By Alexei Bespalko (PinWizz) and Shiru, 2011.
+  Released under the Creative Commons Attribution license (CC BY).
+  https://creativecommons.org/licenses/by/3.0/
+
+Concentration Room (concentration-room.nes)
+  Copyright Damian Yerrick. Free software under the GNU General Public
+  License, version 3 or later, with this exception: "you may copy and
+  distribute exact copies of the program, as published by Damian Yerrick,
+  in iNES or UNIF executable form without source code."
+  Source: https://github.com/pinobatch/croom-nes
+
+Shiru's games: https://shiru.untergrund.net/software.shtml

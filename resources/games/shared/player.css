@@ -1,0 +1,29 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+#screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  display: block;
+  outline: none;
+  image-rendering: pixelated;
+}
+
+/* Doom renders 320×200; scale it up to fit, keeping the 4:3 look. */
+#canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
+}

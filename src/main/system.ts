@@ -12,10 +12,17 @@ interface SystemConfig {
   autoUpdate: boolean
   /** Windows 11 Mica material behind the tab strip. */
   mica: boolean
+  /** Download Doom in the background so it can be played offline. */
+  downloadGames: boolean
 }
 
 const FILE = (): string => join(app.getPath('userData'), 'system.json')
-let config: SystemConfig = { hardwareAcceleration: true, autoUpdate: true, mica: false }
+let config: SystemConfig = {
+  hardwareAcceleration: true,
+  autoUpdate: true,
+  mica: false,
+  downloadGames: true
+}
 /** Value in effect for this run; changing it needs a restart. */
 let accelerationAtStartup = true
 
@@ -25,7 +32,8 @@ function loadConfig(): void {
     config = {
       hardwareAcceleration: data.hardwareAcceleration !== false,
       autoUpdate: data.autoUpdate !== false,
-      mica: data.mica === true
+      mica: data.mica === true,
+      downloadGames: data.downloadGames !== false
     }
   } catch {
     // First run: defaults.
@@ -124,6 +132,7 @@ export function registerSystem(): void {
       config.hardwareAcceleration = patch.hardwareAcceleration
     }
     if (typeof patch.autoUpdate === 'boolean') config.autoUpdate = patch.autoUpdate
+    if (typeof patch.downloadGames === 'boolean') config.downloadGames = patch.downloadGames
     if (typeof patch.mica === 'boolean') {
       config.mica = patch.mica
       for (const window of BrowserWindow.getAllWindows()) applyMica(window)

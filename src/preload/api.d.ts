@@ -38,6 +38,12 @@ declare global {
   /** 'hardware': done by the GPU; 'software': by the CPU; 'off': unavailable. */
   type Acceleration = 'hardware' | 'software' | 'off'
 
+  /** Doom (engine + Freedoom) is downloaded on first use, for offline play. */
+  type DoomStatus =
+    | { state: 'missing' | 'ready' }
+    | { state: 'downloading'; percent: number }
+    | { state: 'error'; error: string }
+
   interface SystemInfo {
     hardwareAcceleration: boolean
     /** What this run actually uses (changing the setting needs a restart). */
@@ -45,6 +51,8 @@ declare global {
     autoUpdate: boolean
     /** Windows 11 Mica behind the tab strip. */
     mica: boolean
+    /** Download Doom in the background so it can be played offline. */
+    downloadGames: boolean
     micaSupported: boolean
     platform: string
     version: string
@@ -133,7 +141,9 @@ declare global {
     suggestSearch(engine: string, query: string): Promise<string[]>
     getSystem(): Promise<SystemInfo>
     setSystem(
-      patch: Partial<Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate' | 'mica'>>
+      patch: Partial<
+        Pick<SystemInfo, 'hardwareAcceleration' | 'autoUpdate' | 'mica' | 'downloadGames'>
+      >
     ): Promise<void>
     /** Restarts Jupiter (to apply the hardware acceleration setting). */
     relaunch(): void
@@ -143,6 +153,10 @@ declare global {
     /** Restarts into the downloaded update. */
     installUpdate(): void
     onUpdateStatus(callback: (status: UpdateStatus) => void): () => void
+    getDoomStatus(): Promise<DoomStatus>
+    /** Downloads Doom now; resolves when it's done (the status says how it went). */
+    downloadDoom(): Promise<void>
+    onDoomStatus(callback: (status: DoomStatus) => void): () => void
     /** Dominant colour of a favicon (#rrggbb), or null. */
     faviconColor(url: string): Promise<string | null>
     getShields(): Promise<ShieldsState>

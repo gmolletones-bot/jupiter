@@ -26,6 +26,7 @@ Los instaladores están en [Releases](https://github.com/gmolletones-bot/jupiter
 - **Historial, marcadores** con barra de marcadores, **búsqueda en la página**, zoom y menú contextual.
 - **Extensiones de Chrome** descomprimidas (compatibilidad parcial).
 - **Actualizaciones automáticas** desde GitHub Releases y aceleración de vídeo por GPU (VA-API en Linux).
+- **Juegos sin conexión** (`jupiter://juegos`): cuando se cae internet, en vez del error sale un arcade con Órbita (propio), Doom (Chocolate Doom + Freedoom, se descarga una vez) y juegos homebrew de NES.
 
 ## Desarrollo
 
@@ -78,3 +79,8 @@ dependencias.
 ## Licencias de terceros
 
 El bloqueador usa [`@ghostery/adblocker`](https://github.com/ghostery/adblocker) (MPL-2.0) y listas de filtros de EasyList y uBlock Origin. La letra manuscrita es [Caveat](https://fonts.google.com/specimen/Caveat) (OFL).
+
+Juegos:
+
+- Emulador de NES [jsnes](https://github.com/bfirsh/jsnes) (Apache-2.0). Los juegos de NES son homebrew (no son de Nintendo): _Lawn Mower_, _LAN Master_ y _Chase_ de Shiru (dominio público), _Zooming Secretary_ de Shiru y PinWizz (CC BY) y _Concentration Room_ de Damian Yerrick (GPL-3.0 con excepción para distribuir la ROM). Detalles en [resources/games/nes/roms/LICENSES.txt](resources/games/nes/roms/LICENSES.txt).
+- Doom no viene en el instalador: Jupiter descarga [Chocolate Doom para WebAssembly](https://github.com/cloudflare/doom-wasm) (GPL-2.0) y [Freedoom](https://freedoom.github.io) (BSD-3) desde sus proyectos y comprueba su huella SHA-256.

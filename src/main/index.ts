@@ -22,6 +22,7 @@ import {
   removeExtension
 } from './extensions'
 import { registerFaviconColors } from './favicon'
+import { registerGames, registerGamesScheme } from './games'
 import { clearHistory, registerHistory, trackHistory } from './history'
 import { migrateFromOldName } from './migrate'
 import { registerStore } from './store'
@@ -167,6 +168,7 @@ function createWindow(): void {
 
 migrateFromOldName()
 applyGpuSwitches()
+registerGamesScheme()
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -185,6 +187,7 @@ app.whenReady().then(async () => {
   registerStore()
   registerSystem()
   registerUpdater()
+  registerGames()
   registerHistory()
 
   ipcMain.on('set-theme', (_, theme: BrowserTheme) => {
