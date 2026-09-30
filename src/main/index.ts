@@ -129,6 +129,11 @@ function shortcutFor(input: Input): ShortcutAction | null {
 }
 
 function createWindow(): void {
+  // Use a standard Chrome user agent so sites like WhatsApp Web don't block us.
+  const chromeVersion = process.versions.chrome?.split('.')[0] ?? '134'
+  const userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion}.0.0.0 Safari/537.36`
+  app.userAgentFallback = userAgent
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1280,
