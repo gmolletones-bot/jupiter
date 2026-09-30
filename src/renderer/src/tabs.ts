@@ -69,7 +69,7 @@ export type TabsAction =
   | { type: 'update'; id: number; patch: Partial<Tab> }
 
 export function createInitialTabs(settings: Settings): TabsState {
-  const session = settings.startup === 'restore' ? loadSession() : null
+  const session = settings.restoreTabs ? loadSession() : null
   const tabs = (session?.urls ?? [settings.homePage]).map(createTab)
   const active = tabs[Math.min(session?.activeIndex ?? 0, tabs.length - 1)] ?? tabs[0]
   return { tabs, activeId: active.id }

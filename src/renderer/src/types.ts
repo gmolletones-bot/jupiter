@@ -94,6 +94,8 @@ export interface Settings {
   showBookmarksBar: boolean
   /** The welcome tour was finished or skipped. */
   onboarded: boolean
+  /** Restore the last session's tabs on startup. */
+  restoreTabs: boolean
 }
 
 export interface Tab {

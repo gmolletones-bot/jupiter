@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { hostnameOf } from '../url'
+import { loadSession } from '../storage'
 import Favicon from './Favicon'
-import { History, X } from 'lucide-react'
+import { History, RotateCcw, X } from 'lucide-react'
 
 const PAGE_SIZE = 150
 
@@ -80,6 +81,14 @@ function HistoryPage({ active, onOpen }: HistoryPageProps): React.JSX.Element {
     setConfirmClear(false)
   }
 
+  const restoreSession = (): void => {
+    const session = loadSession()
+    if (!session) return
+    session.urls.forEach((url) => onOpen(url, false))
+  }
+
+  const hasSession = loadSession() !== null
+
   return (
     <div className={active ? 'page list-page' : 'page list-page hidden'}>
       <div className="list-content">
@@ -105,13 +114,24 @@ function HistoryPage({ active, onOpen }: HistoryPageProps): React.JSX.Element {
               </button>
             </div>
           ) : (
-            <button
-              className="settings-button"
-              disabled={entries.length === 0}
-              onClick={() => setConfirmClear(true)}
-            >
-              Borrar historial
-            </button>
+            <div className="list-actions">
+              <button
+                className="settings-button"
+                disabled={!hasSession}
+                onClick={restoreSession}
+                title="Recuperar la última sesión de pestañas"
+              >
+                <RotateCcw size={16} />
+                Recuperar sesión
+              </button>
+              <button
+                className="settings-button"
+                disabled={entries.length === 0}
+                onClick={() => setConfirmClear(true)}
+              >
+                Borrar historial
+              </button>
+            </div>
           )}
         </header>
 

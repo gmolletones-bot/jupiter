@@ -91,6 +91,20 @@ function HomeSection({
             <span className="settings-label">{mode.label}</span>
           </label>
         ))}
+        <div className="settings-row">
+          <div>
+            <div className="settings-label">Mantener pestañas</div>
+            <div className="settings-hint">
+              Al cerrar Jupiter se guardan las pestañas abiertas y se restauran la próxima vez que
+              inicies.
+            </div>
+          </div>
+          <Switch
+            label="Mantener pestañas"
+            checked={settings.restoreTabs}
+            onChange={(restoreTabs) => onChange({ restoreTabs })}
+          />
+        </div>
       </section>
 
       <section className="settings-card">

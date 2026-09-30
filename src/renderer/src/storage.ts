@@ -56,7 +56,8 @@ export const DEFAULT_SETTINGS: Settings = {
     { id: 'gmail', title: 'Gmail', url: 'https://mail.google.com' }
   ],
   showBookmarksBar: true,
-  onboarded: false
+  onboarded: false,
+  restoreTabs: false
 }
 
 export interface SavedSession {
