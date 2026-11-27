@@ -1,5 +1,16 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+
+// Minimal process info; the full @electron-toolkit/preload package cannot be
+// required from a sandboxed preload.
+const electron = {
+  process: {
+    versions: {
+      electron: process.versions.electron ?? '',
+      chrome: process.versions.chrome ?? '',
+      node: process.versions.node ?? ''
+    }
+  }
+}
 
 // Custom APIs for renderer
 const api: BrowserApi = {
@@ -100,14 +111,14 @@ const api: BrowserApi = {
 // just add to the DOM global.
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
+    contextBridge.exposeInMainWorld('electron', electron)
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
     console.error(error)
   }
 } else {
   // @ts-ignore (define in dts)
-  window.electron = electronAPI
+  window.electron = electron
   // @ts-ignore (define in dts)
   window.api = api
 }

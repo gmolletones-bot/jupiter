@@ -128,11 +128,21 @@ function shortcutFor(input: Input): ShortcutAction | null {
   }
 }
 
+/** A regular Chrome user agent for the current OS, so sites don't block us. */
+function chromeUserAgent(): string {
+  const version = process.versions.chrome?.split('.')[0] ?? '134'
+  const platform =
+    process.platform === 'win32'
+      ? 'Windows NT 10.0; Win64; x64'
+      : process.platform === 'darwin'
+        ? 'Macintosh; Intel Mac OS X 10_15_7'
+        : 'X11; Linux x86_64'
+  return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${version}.0.0.0 Safari/537.36`
+}
+
 function createWindow(): void {
   // Use a standard Chrome user agent so sites like WhatsApp Web don't block us.
-  const chromeVersion = process.versions.chrome?.split('.')[0] ?? '134'
-  const userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion}.0.0.0 Safari/537.36`
-  app.userAgentFallback = userAgent
+  app.userAgentFallback = chromeUserAgent()
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -146,19 +156,13 @@ function createWindow(): void {
     icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: true,
       webviewTag: true
     }
   })
 
-  // Hide Electron's automation flags so Google and other sites don't block us.
-  mainWindow.webContents.on('dom-ready', () => {
-    mainWindow.webContents.executeJavaScript(`
-      Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-      Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3, 4, 5] });
-      Object.defineProperty(navigator, 'languages', { get: () => ['es-ES', 'es', 'en'] });
-    `)
-  })
+  // The browser UI never navigates away from its own local files.
+  mainWindow.webContents.on('will-navigate', (event) => event.preventDefault())
 
   applyMica(mainWindow)
 
@@ -183,6 +187,14 @@ function createWindow(): void {
 migrateFromOldName()
 applyGpuSwitches()
 registerGamesScheme()
+
+// Hide Chromium's automation marker (navigator.webdriver) at the engine level,
+// so Google and other sites treat Jupiter like a regular Chrome browser.
+app.commandLine.appendSwitch('disable-blink-features', 'AutomationControlled')
+
+// The renderer and every webview stay sandboxed; only the GPU helper is not,
+// which avoids launch failures on Linux machines without a usable GPU driver.
+app.commandLine.appendSwitch('disable-gpu-sandbox')
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -267,6 +279,7 @@ app.whenReady().then(async () => {
       delete webPreferences.preload
       webPreferences.nodeIntegration = false
       webPreferences.contextIsolation = true
+      webPreferences.sandbox = true
       // The mini player only loads YouTube/Spotify embeds and starts them on
       // the user's click in the sounds panel, so let them play right away.
       if (isPlayerEmbed(params.src)) webPreferences.autoplayPolicy = 'no-user-gesture-required'
@@ -281,6 +294,11 @@ app.whenReady().then(async () => {
     if (type === 'webview') {
       trackHistory(contents)
       trackShields(contents, host)
+      // Only real web protocols may take over a tab; file:, data: and
+      // javascript: navigation would be a way out of the browser sandbox.
+      contents.on('will-navigate', (event, url) => {
+        if (!/^(https?|chrome-extension):/i.test(url)) event.preventDefault()
+      })
       // Ctrl + mouse wheel zooms the page, like the keyboard shortcuts.
       contents.on('zoom-changed', (_event, direction) =>
         host.send('shortcut', direction === 'in' ? 'zoom-in' : 'zoom-out')
